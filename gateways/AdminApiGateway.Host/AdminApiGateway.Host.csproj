@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+    <AssemblyName>AdminApiGateway.Host</AssemblyName>
+    <RootNamespace>AdminApiGateway.Host</RootNamespace>
+    
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.0.0-dev-00046" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0-dev-00838" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.2.0-alpha0005" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Ocelot" Version="13.8.0-alpha0002" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi.Client" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.IdentityServer" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="0.19.0" />
+    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="0.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\modules\base\host\Base.Host.Shared\Base.Host.Shared.csproj" />
+
+    <ProjectReference Include="..\..\modules\base\src\Base.HttpApi\Base.HttpApi.csproj" />
+
+    <ProjectReference Include="..\..\modules\base\src\Base.UI\Base.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'StackExchange.Redis.StrongName'">
+        <Aliases>signed</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+
+</Project>
