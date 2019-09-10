@@ -324,3 +324,4 @@ samples/Microservice/microservices/OrganizationService.Host/Logs/logs.txt
 /modules/pay/host/Pay.HttpApi.Host/Logs
 /modules/pay/host/Pay.Api.Host/Logs
 /modules/plugin/host/Plugin.HttpApi.Host/Logs
+/vue/*.lock
