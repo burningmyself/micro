@@ -18,6 +18,7 @@ namespace Base
                  * validate the profile on application startup.
                  * See http://docs.automapper.org/en/stable/Configuration-validation.html for more info
                  * about the configuration validation. */
+                options.AddProfile<BaseProfile>(validate: true);
                 options.AddProfile<BaseApplicationAutoMapperProfile>(validate: true);
             });
         }

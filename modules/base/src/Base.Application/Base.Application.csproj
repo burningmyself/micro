@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -14,6 +14,34 @@
   <ItemGroup>
     <ProjectReference Include="..\Base.Application.Contracts\Base.Application.Contracts.csproj" />
     <ProjectReference Include="..\Base.Domain\Base.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="T4\Application.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Application.cs</LastGenOutput>
+    </None>
+    <None Update="T4\AutMapper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AutMapper.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="T4\Application.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.tt</DependentUpon>
+    </Compile>
+    <Compile Update="T4\AutMapper.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AutMapper.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

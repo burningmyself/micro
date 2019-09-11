@@ -19,6 +19,8 @@ using Volo.Abp.MultiTenancy;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.Threading;
+using Volo.Abp.Data;
 
 namespace Base
 {
@@ -124,6 +126,19 @@ namespace Base
             });
             app.UseAuditing();
             app.UseMvcWithDefaultRouteAndArea();
+            SeedData(context);
+        }
+        private void SeedData(ApplicationInitializationContext context)
+        {
+            AsyncHelper.RunSync(async () =>
+            {
+                using (var scope = context.ServiceProvider.CreateScope())
+                {
+                    await scope.ServiceProvider
+                        .GetRequiredService<IDataSeeder>()
+                        .SeedAsync();
+                }
+            });
         }
     }
 }
