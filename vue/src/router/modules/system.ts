@@ -32,7 +32,7 @@ const systemRouter: RouteConfig = {
             icon: 'md-menu',
             title: 'tenants'
         },
-        component: () => import('@/views/system/tenants.vue')
+        component: () => import('@/views/system/tenant/index.vue')
     },]
 }
 

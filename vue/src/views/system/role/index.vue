@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.title"
-        :placeholder="$t('table.title')"
+        v-model="listQuery.filter"
+        :placeholder="$t('role.filter')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -140,7 +140,7 @@ import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
 import { getRoles, updateRole, createRole,deleteRole } from "@/api/roles";
-import { setTimeout } from "timers";
+
 interface IRoleData {
   id: string;
   name: string;
@@ -188,8 +188,10 @@ export default class extends Vue {
     name: [{ required: true, message: "name is required", trigger: "change" }]
   };
 
-  private handleFilter() {}
-
+  private handleFilter() {
+    this.listQuery.page = 1
+    this.getList()
+  }
   private resetTempRoleData() {
     this.tempRoleData = cloneDeep(defaultRoleData);
   }
