@@ -1,0 +1,143 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.IO" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="Microsoft.SqlServer.ConnectionInfo" #>
+<#@ assembly name="Microsoft.SqlServer.Smo" #>
+<#@ assembly name="Microsoft.SqlServer.Management.Sdk.Sfc" #>
+
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Configuration" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.SqlServer.Management.Smo" #>
+<#@ import namespace="Microsoft.SqlServer.Management.Common" #>
+
+<#@ output extension=".cs" #>
+
+<#
+string appConfig = this.Host.ResolvePath("../../../host/Base.HttpApi.Host/App.Config");
+if(!File.Exists(appConfig))
+{
+	Error("App.config not exists");
+}
+ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+configFile.ExeConfigFilename = appConfig;
+var configuration = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+var connectionString = configuration.ConnectionStrings.ConnectionStrings["Default"].ConnectionString;
+SqlConnection sqlConnection = new SqlConnection(connectionString);
+ServerConnection serverConnection = new ServerConnection(sqlConnection);
+Server server = new Server(serverConnection);
+var tables = server.Databases[server.ConnectionContext.DatabaseName].Tables;
+
+#>
+using System;
+<#
+foreach(Table table in tables)
+{
+	
+#>
+<#if ("__EFMigrationsHistory".Equals(table.Name))
+    {
+        continue;
+    }#>
+	namespace <#= server.ConnectionContext.DatabaseName.Substring(0,server.ConnectionContext.DatabaseName.IndexOf("_")) #>.<#= table.Name#>
+{
+public  partial class Create<#= table.Name#>Dto
+{
+<#
+foreach(Column column in table.Columns)
+{
+#>
+	public virtual <#= ToClrType(column.DataType, column.Nullable) #> <#=column.Name #> { get; set; }
+<#
+}
+#>
+}
+}
+<#
+}
+#>
+
+<#+ 
+private string FixTableName(string tableName)
+{
+	var result = tableName.Replace(" ","_");
+	return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(result);
+}
+
+private string ToClrType(DataType dataType, bool isNullable)
+{
+	string returnType = string.Empty;
+	switch (dataType.SqlDataType)
+    {
+        case SqlDataType.BigInt:
+            returnType = string.Format("{0}{1}","long", isNullable ? "?":"");
+			break;
+        case SqlDataType.Binary:
+        case SqlDataType.Image:
+        case SqlDataType.Timestamp:
+        case SqlDataType.VarBinary:
+            returnType = "byte[]";
+			break;
+        case SqlDataType.Bit:
+			returnType = string.Format("{0}{1}","bool", isNullable ? "?":"");
+			break;
+        case SqlDataType.Char:
+        case SqlDataType.NChar:
+        case SqlDataType.NText:
+        case SqlDataType.NVarChar:
+        case SqlDataType.Text:
+        case SqlDataType.VarChar:
+        case SqlDataType.Xml:
+            returnType = string.Format("{0}{1}","string", "");
+			break;
+        case SqlDataType.DateTime:
+        case SqlDataType.SmallDateTime:
+        case SqlDataType.Date:
+        case SqlDataType.Time:
+        case SqlDataType.DateTime2:
+			returnType = string.Format("{0}{1}","System.DateTime", isNullable ? "?":"");
+			break;
+        case SqlDataType.Decimal:
+        case SqlDataType.Money:
+        case SqlDataType.SmallMoney:
+			returnType = string.Format("{0}{1}","decimal", isNullable ? "?":"");
+			break;
+        case SqlDataType.Float:
+			returnType = string.Format("{0}{1}","double", isNullable ? "?":"");
+			break;
+        case SqlDataType.Int:
+			returnType = string.Format("{0}{1}","int", isNullable ? "?":"");
+			break;
+        case SqlDataType.Real:
+			returnType = string.Format("{0}{1}","float", isNullable ? "?":"");
+			break;
+        case SqlDataType.UniqueIdentifier:
+			returnType = string.Format("{0}{1}","Guid", isNullable ? "?":"");
+			break;
+        case SqlDataType.SmallInt:
+            returnType = string.Format("{0}{1}","short", isNullable ? "?":"");
+			break;
+        case SqlDataType.TinyInt:
+            returnType = string.Format("{0}{1}","byte", isNullable ? "?":"");
+			break;
+        case SqlDataType.Variant:
+            returnType = string.Format("{0}{1}","object", "");
+			break;
+        case SqlDataType.DateTimeOffset:
+            returnType = string.Format("{0}{1}","DateTimeOffset", isNullable ? "?":"");
+			break;
+		default:			
+			returnType = string.Format("{0}{1}","string", "");
+			break;
+		}
+
+		return returnType;
+}
+#>

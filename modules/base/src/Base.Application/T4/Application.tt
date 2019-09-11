@@ -1,0 +1,80 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.IO" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="Microsoft.SqlServer.ConnectionInfo" #>
+<#@ assembly name="Microsoft.SqlServer.Smo" #>
+<#@ assembly name="Microsoft.SqlServer.Management.Sdk.Sfc" #>
+
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Configuration" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.SqlServer.Management.Smo" #>
+<#@ import namespace="Microsoft.SqlServer.Management.Common" #>
+
+<#@ output extension=".cs" #>
+
+<#
+string appConfig = this.Host.ResolvePath("../../../host/Base.HttpApi.Host/App.Config");
+if(!File.Exists(appConfig))
+{
+	Error("App.config not exists");
+}
+ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+configFile.ExeConfigFilename = appConfig;
+var configuration = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+var connectionString = configuration.ConnectionStrings.ConnectionStrings["Default"].ConnectionString;
+SqlConnection sqlConnection = new SqlConnection(connectionString);
+ServerConnection serverConnection = new ServerConnection(sqlConnection);
+Server server = new Server(serverConnection);
+var tables = server.Databases[server.ConnectionContext.DatabaseName].Tables;
+
+#>
+
+using <#= server.ConnectionContext.DatabaseName.Substring(0,server.ConnectionContext.DatabaseName.IndexOf("_")) #>.Entity;
+using System;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Domain.Repositories;
+using System.Linq;
+
+<#
+foreach(Table table in tables)
+{#>
+	<#if ("__EFMigrationsHistory".Equals(table.Name))
+    {
+        continue;
+    }#>
+	namespace <#= server.ConnectionContext.DatabaseName.Substring(0,server.ConnectionContext.DatabaseName.IndexOf("_")) #>.<#=table.Name #> 
+{
+	public partial class <#=table.Name #>AppService:CrudAppService<<#=table.Name #>Entity, <#=table.Name #>Dto, Guid, PagedAndSortedResultRequestDto,
+            Create<#=table.Name #>Dto, Update<#=table.Name #>Dto>,
+        I<#=table.Name #>AppService
+	{
+		private readonly IRepository<<#=table.Name #>Entity, Guid> _repository;
+		public <#=table.Name #>AppService(IRepository<<#=table.Name #>Entity, Guid> repository)
+            : base(repository)
+        {
+			_repository = repository;
+        }
+		public IQueryable<<#=table.Name #>Entity> GetQueryable()
+        {
+            return _repository.AsQueryable();
+        }
+	}
+	}
+
+
+
+<#
+}
+#>
+
+
+
