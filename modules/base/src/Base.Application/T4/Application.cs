@@ -21,10 +21,6 @@ using System.Linq;
         {
 			_repository = repository;
         }
-		public IQueryable<DistrictEntity> GetQueryable()
-        {
-            return _repository.AsQueryable();
-        }
 	}
 	}
 

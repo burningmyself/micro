@@ -13,7 +13,7 @@ namespace Base.District
     {
         public async Task<PagedResultDto<DistrictDto>> GetListAsync(DistrictRequestResultDto input)
         {
-            var list = GetQueryable();
+            var list = _repository.AsQueryable();
             if (input.DistrictSort > 0)
             {
                 list = list.Where(d => d.DistrictSort == input.DistrictSort);

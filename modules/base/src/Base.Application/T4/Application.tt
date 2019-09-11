@@ -63,10 +63,6 @@ foreach(Table table in tables)
         {
 			_repository = repository;
         }
-		public IQueryable<<#=table.Name #>Entity> GetQueryable()
-        {
-            return _repository.AsQueryable();
-        }
 	}
 	}
 

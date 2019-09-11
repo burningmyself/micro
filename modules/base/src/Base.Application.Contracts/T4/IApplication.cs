@@ -13,7 +13,7 @@ using System.Linq;
 	public partial interface IDistrictAppService:ICrudAppService<DistrictDto, Guid, PagedAndSortedResultRequestDto,
             CreateDistrictDto, UpdateDistrictDto>
 	{
-		IQueryable<DistrictEntity> GetQueryable();
+
 	}
 
 }

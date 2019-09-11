@@ -55,7 +55,7 @@ foreach(Table table in tables)
 	public partial interface I<#=table.Name #>AppService:ICrudAppService<<#=table.Name #>Dto, Guid, PagedAndSortedResultRequestDto,
             Create<#=table.Name #>Dto, Update<#=table.Name #>Dto>
 	{
-		IQueryable<<#=table.Name #>Entity> GetQueryable();
+
 	}
 
 }

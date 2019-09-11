@@ -21,6 +21,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.Threading;
 using Volo.Abp.Data;
+using Volo.Abp.AspNetCore.Mvc;
 
 namespace Base
 {
@@ -100,6 +101,12 @@ namespace Base
                     .AddDataProtection()
                     .PersistKeysToStackExchangeRedis(redis, "Base-Protection-Keys");
             }
+            //Configure<AbpAspNetCoreMvcOptions>(options =>
+            //{
+            //    options
+            //        .ConventionalControllers
+            //        .Create(typeof(BaseApplicationModule).Assembly);
+            //});
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

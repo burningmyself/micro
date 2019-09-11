@@ -28,6 +28,7 @@ namespace Base.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet]
+        [Route("List")]
         public async Task<PagedResultDto<DistrictDto>> GetListAsync([FromQuery]DistrictRequestResultDto input)
         {
             return await _districtAppService.GetListAsync(input);
