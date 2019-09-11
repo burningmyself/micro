@@ -12,7 +12,7 @@ namespace Base.EntityFrameworkCore
             var configuration = BuildConfiguration();
 
             var builder = new DbContextOptionsBuilder<MyProjectHttpApiHostMigrationsDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("Default"));
+                .UseSqlServer(configuration.GetConnectionString("Base"));
 
             return new MyProjectHttpApiHostMigrationsDbContext(builder.Options);
         }
