@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Base.Entity;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -15,7 +16,8 @@ namespace Base.EntityFrameworkCore
          * public DbSet<Question> Questions { get; set; }
          */
 
-        public BaseDbContext(DbContextOptions<BaseDbContext> options) 
+        public DbSet<DistrictEntity> Districts { get; set; }
+        public BaseDbContext(DbContextOptions<BaseDbContext> options)
             : base(options)
         {
 

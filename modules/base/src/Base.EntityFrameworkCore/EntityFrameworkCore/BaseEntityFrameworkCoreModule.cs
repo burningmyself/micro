@@ -17,6 +17,7 @@ namespace Base.EntityFrameworkCore
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, EfCoreQuestionRepository>();
                  */
+                options.AddDefaultRepositories(true);
             });
         }
     }

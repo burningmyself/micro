@@ -1,4 +1,5 @@
 ﻿using System;
+using Base.Entity;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
 
@@ -35,6 +36,8 @@ namespace Base.EntityFrameworkCore
                 b.HasIndex(q => q.CreationTime);
             });
             */
+
+            builder.Entity<DistrictEntity>(b => { });
         }
     }
 }

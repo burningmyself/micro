@@ -87,7 +87,7 @@ namespace Base.Controllers
             TokenResponse tokenresp = await tokenClient.RequestResourceOwnerPasswordAsync(
                 login.UserNameOrEmailAddress,
                 login.Password,
-                "Pay",
+                "Base",
                 extra: new Dictionary<string, string>
                 {
                     {_aspNetCoreMultiTenancyOptions.TenantKey,login.TenanId?.ToString()}
@@ -163,7 +163,7 @@ namespace Base.Controllers
         {
             var profile = await _profileAppService.GetAsync();
             //var user = await _userAppService.GetAsync(CurrentUser.GetId());
-            var roles =await _userAppService.GetRolesAsync(CurrentUser.GetId());
+            var roles = await _userAppService.GetRolesAsync(CurrentUser.GetId());
 
             var auth = await GetAuthConfigAsync();
 
@@ -196,6 +196,11 @@ namespace Base.Controllers
             }
 
             return authConfig;
+        }
+        [HttpPost]
+        public async Task<IActionResult> LogOut()
+        {
+            return Json(new { code = 1, data = "{msg:'success'}" });
         }
     }
 }

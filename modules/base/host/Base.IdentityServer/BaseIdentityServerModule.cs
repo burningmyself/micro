@@ -31,6 +31,8 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Threading;
 using Volo.Abp.UI.Navigation.Urls;
+using System;
+using System.Linq;
 
 namespace Base
 {
@@ -59,6 +61,8 @@ namespace Base
         )]
     public class BaseIdentityServerModule : AbpModule
     {
+        // 默认的跨域请求策略名称
+        private const string _defaultCorsPolicyName = "Base.Api.Cors";
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
@@ -117,6 +121,16 @@ namespace Base
                     .AddDataProtection()
                     .PersistKeysToStackExchangeRedis(redis, "Base-Protection-Keys");
             }
+            #region "配置 CORS 授权策略"
+            context.Services.AddCors(options => options.AddPolicy(_defaultCorsPolicyName,
+            builder => builder.WithOrigins(
+                    configuration["AllowedHosts"]
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray()
+                )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()));
+            #endregion
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -138,6 +152,9 @@ namespace Base
             }
             app.UseIdentityServer();
             app.UseAbpRequestLocalization();
+            // 允许跨域请求访问
+            app.UseCors(_defaultCorsPolicyName);
+
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
