@@ -272,7 +272,7 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true;
     const data = await getRoles(this.listQuery);
-    this.list = data.items;
+    this.list = data.data.item;
     this.total = this.list.length;
     // Just to simulate the time of the request
     setTimeout(() => {
