@@ -24,7 +24,7 @@ class User extends VuexModule implements IUserState {
   public introduction = ''
   public roles: string[] = []
   public email = ''
-  public auth: string[] = []
+  public auth: any = {}
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -65,6 +65,7 @@ class User extends VuexModule implements IUserState {
     let { username, password } = userInfo
     let userNameOrEmailAddress = username.trim()
     const { data } = await login({ userNameOrEmailAddress, password })
+
     setToken(`${data.token_type} ${data.access_token}`, data.expires_in)
     this.SET_TOKEN(`${data.token_type} ${data.access_token}`)
   }
@@ -90,8 +91,8 @@ class User extends VuexModule implements IUserState {
     // roles must be a non-empty array
     if (!roles || roles.length <= 0) {
       throw Error('GetUserInfo: roles must be a non-null array!')
-    }   
-    this.SET_ROLES(roles.map((e: { name: any; })=>e.name))
+    }
+    this.SET_ROLES(roles.map((e: { name: any; }) => e.name))
     this.SET_NAME(profile.name)
     this.SET_AVATAR(profile.avatar || this.avatar)
     this.SET_INTRODUCTION(profile.surname)

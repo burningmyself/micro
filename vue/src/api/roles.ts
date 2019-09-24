@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export const getRoles = (params: any) =>
   request({
-    url: '/identity/roles',
+    url: '/Account/getRolesAndGrantPermission',
     method: 'get',
     params
   })
@@ -11,6 +11,14 @@ export const createRole = (data: any) =>
   request({
     url: '/identity/roles',
     method: 'post',
+    data
+  })
+
+
+  export const editRolePermission = (data:any) =>
+  request({
+    url:'/Account/UpdateRoleGrantPermission',
+    method:"POST",
     data
   })
 

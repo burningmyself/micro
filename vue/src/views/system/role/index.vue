@@ -119,32 +119,28 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
-          <el-button
-            type="primary"
-            @click="dialogStatus==='create'?createData():updateData()"
-          >{{ $t('role.confirm') }}</el-button>
+          <el-button type="primary" @click="Sub">{{ $t('role.confirm') }}</el-button>
         </div>
       </el-dialog>
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormPermission">
         <el-form
           ref="PermissionForm"
           :rules="rules"
           :model="tempRoleData"
           label-position="left"
           label-width="100px"
-          style="width: 400px; margin-left:50px;"
+          style="width: 400px;height:800px !important;margin-left:50px;"
         >
           <el-form-item :label="$t('role.name')" prop="name">
             <el-input v-model="tempRoleData.name" />
           </el-form-item>
-         
+          <el-form-item>
+            <el-checkbox v-for="item in permission.array" v-model="item.v" :key="item.t">{{item.t}}</el-checkbox>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
-          <el-button
-            type="primary"
-            @click="dialogStatus==='create'?createData():updateData()"
-          >{{ $t('role.confirm') }}</el-button>
+          <el-button type="primary" @click="Sub">{{ $t('role.confirm') }}</el-button>
         </div>
       </el-dialog>
       <el-dialog :visible.sync="dialogPageviewsVisible" title="Reading statistics">
@@ -166,8 +162,16 @@ import { cloneDeep } from "lodash";
 import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
-import { getRoles, updateRole, createRole, deleteRole } from "@/api/roles";
+import {
+  getRoles,
+  updateRole,
+  createRole,
+  deleteRole,
+  editRolePermission
+} from "@/api/roles";
 
+import { UserModule } from "@/store/modules/user";
+import { RoleModule } from "@/store/modules/role";
 interface IRoleData {
   id: string;
   name: string;
@@ -190,6 +194,26 @@ const defaultRoleData: IRoleData = {
   }
 })
 export default class extends Vue {
+  constructor() {
+    super();
+    let t = UserModule.auth.policies;
+    for (let item in t) {
+      this.permission.array.push({ t: item, v: false });
+    }
+  }
+
+  Sub() {
+    let t = this.permission.array;
+    let filterData = t.filter(x => x.v);
+    let subData = filterData.map(x => x.t);
+    editRolePermission({id:this.roleid,grantPermission:subData}).then(res => {
+      debugger;
+    });
+  }
+
+  private roleid!: string;
+  private currentGrantPermission: Array<string> = RoleModule.grantPermission;
+
   private tableKey = 0;
   private listLoading = true;
   private list = [];
@@ -203,10 +227,17 @@ export default class extends Vue {
     sort: "+id"
   };
   private dialogFormVisible = false;
+  private dialogFormPermission = false;
   private dialogStatus = "";
   private textMap = {
     update: "Edit",
-    create: "Create"
+    create: "Create",
+    permission: "Permission"
+  };
+
+  private permission = {
+    checkList: [],
+    array: new Array<any>()
   };
 
   private dialogPageviewsVisible = false;
@@ -255,9 +286,20 @@ export default class extends Vue {
     });
   }
   private handlePermission(row: any) {
+    let g = row.grantPermission;
+    let per = this.permission;
+    for (let i in g) {
+      for (let j in per.array) {
+        if (g[i] == per.array[j].t) {
+          per.array[j].v = true;
+        }
+      }
+    }
+    this.permission;
     this.tempRoleData = Object.assign({}, row);
     this.dialogStatus = "permission";
-    this.dialogFormVisible = true;
+    this.roleid = row.id
+    this.dialogFormPermission = true;
     this.$nextTick(() => {
       (this.$refs["PermissionForm"] as Form).clearValidate();
     });

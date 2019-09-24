@@ -22,9 +22,37 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations;
 using Microsoft.AspNetCore.Authorization;
+using Volo.Abp.Application.Dtos;
+using System.Linq;
+using Volo.Abp.Domain.Repositories;
+using Volo.Abp.PermissionManagement;
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Uow;
 
 namespace Base.Controllers
 {
+
+    public class RoleDto:IdentityRoleDto
+    {
+
+        public List<string> grantPermission = new List<string>();
+    }
+
+
+    public class RolePerssionReq:EntityDto<Guid>
+    {
+
+        public List<string> grantPermission
+        {
+            get; set;
+        }
+
+
+
+    }
+
+
     [RemoteService]
     [Route("/api/[controller]/[action]")]
     public class AccountController : AbpController
@@ -40,6 +68,9 @@ namespace Base.Controllers
         private readonly IAbpAuthorizationPolicyProvider _abpAuthorizationPolicyProvider;
         private readonly IAbpAuthorizationService _authorizationService;
         private readonly IPermissionDefinitionManager _permissionDefinitionManager;
+        private readonly IRepository<PermissionGrant> _permissionGrant;
+
+        private readonly IRepository<IdentityRole> _identityRole;
 
         public AccountController(IdentityUserManager userManager,
             IConfigurationAccessor configurationAccessor,
@@ -50,7 +81,9 @@ namespace Base.Controllers
             IIdentityUserAppService userAppService,
             IAbpAuthorizationPolicyProvider abpAuthorizationPolicyProvider,
             IAbpAuthorizationService authorizationService,
-            IPermissionDefinitionManager permissionDefinitionManager
+            IRepository<PermissionGrant> permissionGrant,
+            IPermissionDefinitionManager permissionDefinitionManager,
+            IRepository<IdentityRole> identityRole
             )
         {
             _userManager = userManager;
@@ -64,7 +97,66 @@ namespace Base.Controllers
             _authorizationService = authorizationService;
             _permissionDefinitionManager = permissionDefinitionManager;
             //_authenticator = authenticator;
+            _permissionGrant = permissionGrant;
+            _identityRole = identityRole;
         }
+
+
+
+
+        /// <summary>
+        /// 获取角色 --带权限
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ListResultDto<RoleDto>> getRolesAndGrantPermission([FromQuery]PagedAndSortedResultRequestDto req)
+        {
+            //返回数据
+            var resultDto = new ListResultDto<RoleDto>();
+            //分页获取角色
+            var roleData = JsonConvert.DeserializeObject<List<RoleDto>>(JsonConvert.SerializeObject(_identityRole
+                .AsQueryable().Skip(req.SkipCount).Take(req.MaxResultCount).ToList()));
+            //获取所有role权限
+            var permissionRoleData = _permissionGrant.Where(res => res.ProviderName == "Role").ToList();
+            foreach (var role in roleData)
+            {
+                foreach (var permission in permissionRoleData)
+                {
+                    if (role.Name == permission.ProviderKey)
+                    {
+                        role.grantPermission?.Add(permission.Name);
+                    }
+                }
+            }
+            return new ListResultDto<RoleDto>()
+            {
+                Items = roleData
+            };
+        }
+
+
+        [UnitOfWork]
+        [HttpPost]
+        public async Task UpdateRoleGrantPermission([FromBody]RolePerssionReq req)
+        {
+            //get当前角色
+            IdentityRole role = await _identityRole.FirstOrDefaultAsync(res=>res.Id == req.Id);
+            //清楚当前用户所有权限
+            await _permissionGrant.DeleteAsync(r => r.ProviderKey == role.Name);
+            //加入权限
+            req.grantPermission.ForEach(async res =>
+            {
+                await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(),res, "Role",role.Name));
+            });
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// DiscoveryClient方法提示在下一个版本被弃用，scope传递offline_access，可得到refresh_token值
