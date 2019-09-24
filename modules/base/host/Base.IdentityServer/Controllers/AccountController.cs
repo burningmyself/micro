@@ -102,8 +102,6 @@ namespace Base.Controllers
         }
 
 
-
-
         /// <summary>
         /// 获取角色 --带权限
         /// </summary>
@@ -135,7 +133,6 @@ namespace Base.Controllers
             };
         }
 
-
         [UnitOfWork]
         [HttpPost]
         public async Task UpdateRoleGrantPermission([FromBody]RolePerssionReq req)
@@ -150,13 +147,6 @@ namespace Base.Controllers
                 await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(),res, "Role",role.Name));
             });
         }
-
-
-
-
-
-
-
 
         /// <summary>
         /// DiscoveryClient方法提示在下一个版本被弃用，scope传递offline_access，可得到refresh_token值
