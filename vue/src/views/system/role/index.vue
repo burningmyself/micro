@@ -75,6 +75,12 @@
               type="danger"
               @click="handleDelete(row,'deleted')"
             >{{ $t('role.delete') }}</el-button>
+
+            <el-button
+              size="mini"
+              type="warning"
+              @click="handlePermission(row,'permission')"
+            >{{ $t('role.permission') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,7 +125,28 @@
           >{{ $t('role.confirm') }}</el-button>
         </div>
       </el-dialog>
-
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+        <el-form
+          ref="PermissionForm"
+          :rules="rules"
+          :model="tempRoleData"
+          label-position="left"
+          label-width="100px"
+          style="width: 400px; margin-left:50px;"
+        >
+          <el-form-item :label="$t('role.name')" prop="name">
+            <el-input v-model="tempRoleData.name" />
+          </el-form-item>
+         
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus==='create'?createData():updateData()"
+          >{{ $t('role.confirm') }}</el-button>
+        </div>
+      </el-dialog>
       <el-dialog :visible.sync="dialogPageviewsVisible" title="Reading statistics">
         <el-table :data="pageviewsData" border fit highlight-current-row style="width: 100%">
           <el-table-column prop="key" label="Channel" />
@@ -139,7 +166,7 @@ import { cloneDeep } from "lodash";
 import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
-import { getRoles, updateRole, createRole,deleteRole } from "@/api/roles";
+import { getRoles, updateRole, createRole, deleteRole } from "@/api/roles";
 
 interface IRoleData {
   id: string;
@@ -189,8 +216,8 @@ export default class extends Vue {
   };
 
   private handleFilter() {
-    this.listQuery.page = 1
-    this.getList()
+    this.listQuery.page = 1;
+    this.getList();
   }
   private resetTempRoleData() {
     this.tempRoleData = cloneDeep(defaultRoleData);
@@ -203,76 +230,84 @@ export default class extends Vue {
       (this.$refs["dataForm"] as Form).clearValidate();
     });
   }
- private createData() {
-    (this.$refs['dataForm'] as Form).validate(async(valid) => {
+  private createData() {
+    (this.$refs["dataForm"] as Form).validate(async valid => {
       if (valid) {
-        let { id,isStatic,...roleData } = this.tempRoleData
-        const data  = await createRole(roleData)
-        this.list.unshift(data)
-        this.dialogFormVisible = false
+        let { id, isStatic, ...roleData } = this.tempRoleData;
+        const data = await createRole(roleData);
+        this.list.unshift(data);
+        this.dialogFormVisible = false;
         this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
+          title: "成功",
+          message: "创建成功",
+          type: "success",
           duration: 2000
-        })
+        });
       }
-    })
+    });
   }
   private handleUpdate(row: any) {
-    this.tempRoleData = Object.assign({}, row)
-    this.dialogStatus = 'update'
-    this.dialogFormVisible = true
+    this.tempRoleData = Object.assign({}, row);
+    this.dialogStatus = "update";
+    this.dialogFormVisible = true;
     this.$nextTick(() => {
-      (this.$refs['dataForm'] as Form).clearValidate()
-    })
+      (this.$refs["dataForm"] as Form).clearValidate();
+    });
   }
- private updateData() {
-    (this.$refs['dataForm'] as Form).validate(async(valid) => {
+  private handlePermission(row: any) {
+    this.tempRoleData = Object.assign({}, row);
+    this.dialogStatus = "permission";
+    this.dialogFormVisible = true;
+    this.$nextTick(() => {
+      (this.$refs["PermissionForm"] as Form).clearValidate();
+    });
+  }
+  private updateData() {
+    (this.$refs["dataForm"] as Form).validate(async valid => {
       if (valid) {
-        const tempData = Object.assign({}, this.tempRoleData)
-        const data = await updateRole(tempData.id, tempData)
+        const tempData = Object.assign({}, this.tempRoleData);
+        const data = await updateRole(tempData.id, tempData);
         for (const v of this.list) {
           if (v.id === data.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1, data)
-            break
+            const index = this.list.indexOf(v);
+            this.list.splice(index, 1, data);
+            break;
           }
         }
-        this.dialogFormVisible = false
+        this.dialogFormVisible = false;
         this.$notify({
-          title: '成功',
-          message: '更新成功',
-          type: 'success',
+          title: "成功",
+          message: "更新成功",
+          type: "success",
           duration: 2000
-        })
+        });
       }
-    })
+    });
   }
   private handleModifyStatus() {}
 
   private handleGetPageviews() {}
 
-  private handleDelete(row:any) {
-    const data = deleteRole(row.id)
-    if(data){
-      this.list = this.list.filter(r=>r!==row)
+  private handleDelete(row: any) {
+    const data = deleteRole(row.id);
+    if (data) {
+      this.list = this.list.filter(r => r !== row);
       this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
+        title: "成功",
+        message: "删除成功",
+        type: "success",
         duration: 2000
-      })
+      });
     }
   }
-  private tempRoleData=defaultRoleData
+  private tempRoleData = defaultRoleData;
   created() {
-    this.getList();   
+    this.getList();
   }
   private async getList() {
     this.listLoading = true;
     const data = await getRoles(this.listQuery);
-    this.list = data.data.item;
+    this.list = data.items;
     this.total = this.list.length;
     // Just to simulate the time of the request
     setTimeout(() => {

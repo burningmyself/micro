@@ -4,7 +4,7 @@ export const getUsers = (params: any) =>
   request({
     url: '/identity/users',
     method: 'get',
-    params
+    params,
   })
 
 export const getUserInfo = (data: any) =>
