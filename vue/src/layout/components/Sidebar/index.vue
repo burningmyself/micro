@@ -62,20 +62,17 @@ export default class extends Vue {
   }
 
   fooMenu(grantRoutes: Array<string>, routes: Array<Root>) {
-    let array: Array<Root> = JSON.parse(JSON.stringify(routes));
-    let obj: Array<Root> = [];
-    for (let i = 0; i < array.length; i++) {
-      let item = array[i];
-      if (grantRoutes.find(g => g == item.name) == undefined) {
-        //array.splice(i, 1);
-      } else {
+    let arr: Array<Root> = [];
+    for (let i = 0; i < routes.length; i++) {
+      let item = routes[i];
+      if (!(grantRoutes.find(g => g == item.name) == undefined)) {
         if (item.children != undefined) {
           item.children = this.fooMenu(grantRoutes, item.children);
         }
-        obj.push(item);
+        arr.push(item);
       }
     }
-    return obj;
+    return arr;
   }
 
   get sidebar() {
