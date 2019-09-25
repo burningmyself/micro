@@ -7,6 +7,16 @@ export const getRoles = (params: any) =>
     params
   })
 
+/**
+ * 不分页
+ * 获取所有角色
+ */
+export const getBaseRoles = () =>
+  request({
+    url: '/identity/roles',
+    method: 'get',
+  })
+
 export const createRole = (data: any) =>
   request({
     url: '/identity/roles',
@@ -15,10 +25,10 @@ export const createRole = (data: any) =>
   })
 
 
-  export const editRolePermission = (data:any) =>
+export const editRolePermission = (data: any) =>
   request({
-    url:'/Account/UpdateRoleGrantPermission',
-    method:"POST",
+    url: '/Account/UpdateRoleGrantPermission',
+    method: "POST",
     data
   })
 

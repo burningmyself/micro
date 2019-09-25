@@ -110,6 +110,8 @@
               type="danger"
               @click="handleDelete(row,'deleted')"
             >{{ $t('User.delete') }}</el-button>
+
+            <el-button size="mini" type="warning" @click="handleRole(row)">{{ $t('User.roles') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,6 +122,39 @@
         :limit.sync="listQuery.limit"
         @pagination="getList"
       />
+
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="digRole">
+        <el-form
+          ref="dataForm"
+          :rules="rules"
+          :model="tempUserData"
+          label-position="left"
+          label-width="100px"
+          style="width: 400px; margin-left:50px;"
+        >
+          <el-form-item :label="$t('User.name')" prop="name">
+            <el-input v-model="tempUserData.name" />
+          </el-form-item>
+          <el-form-item :label="$t('User.roles')" prop="name">
+            <el-checkbox v-for="item in roleArray" v-model="item.v" :key="item.name">{{item.name}}</el-checkbox>
+          </el-form-item>
+          <el-form-item :label="$t('User.permission')" prop="name">
+            <el-checkbox
+              v-for="item in permission.array"
+              v-model="item.v"
+              :key="item.name"
+            >{{item.name}}</el-checkbox>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="digRole = false">{{ $t('User.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="submitPermission"
+          >{{ $t('User.confirm') }}</el-button>
+        </div>
+      </el-dialog>
+
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
         <el-form
           ref="dataForm"
@@ -182,7 +217,19 @@ import { cloneDeep } from "lodash";
 import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
-import { getUsers, updateUser, createUser, deleteUser } from "@/api/users";
+import {
+  getUsers,
+  updateUser,
+  createUser,
+  deleteUser,
+  getUserGrantPermission,
+  getPermissionByUserId,
+  UserAndRoleRoot,
+  updateUserIsRoleAndPermission
+} from "@/api/users";
+import { regex } from "../../../regex";
+import { getBaseRoles } from "../../../api/roles";
+import { UserModule } from "../../../store/modules/user";
 
 interface IUserData {
   id: string;
@@ -236,6 +283,109 @@ export default class extends Vue {
 
   private dialogPageviewsVisible = false;
   private pageviewsData = [];
+
+  //#region "role权限"
+  /**
+   * 角色弹窗显示
+   */
+  private digRole: boolean = false;
+  private roleArray: Array<any> = [];
+
+  //当前用户拥有的角色
+  private grantRoles: Array<object> = [];
+  //当前用户拥有的权限
+  private grantPermission: Array<object> = [];
+
+  private userInfo: any = {};
+
+  /**
+   * 初始化数据
+   */
+  permissionOpen() {
+    this.digRole = true;
+    this.roleArray = [];
+    this.grantRoles = [];
+    this.userInfo = {};
+    this.grantPermission = [];
+  }
+
+  /**
+   * 打开弹窗初始化数据
+   */
+  async handleRole(row: any) {
+    //打开弹窗
+    this.permissionOpen();
+    this.userInfo = row;
+    this.tempUserData = Object.assign({}, row);
+    let data = await this.getRoles();
+    //获取当前用户角色
+    let roles = await getPermissionByUserId(row.id);
+    let array: any = [];
+    let arrayNULL: any = [];
+    data.items.map(xs => {
+      roles.items.map(x => {
+        let item = {
+          id: xs.id,
+          name: xs.name,
+          v: false
+        };
+        if (item.name == x.name) {
+          item.v = true;
+        }
+        array.push(item);
+      });
+      let item = {
+        id: xs.id,
+        name: xs.name,
+        v: false
+      };
+      arrayNULL.push(item);
+    });
+
+    if (array.length != 0) this.roleArray = array;
+    else this.roleArray = arrayNULL;
+    //获取当前用户权限
+    let per = await getUserGrantPermission(row.id);
+  }
+
+  submitPermission() {
+    //当前id
+    let id = this.userInfo.id;
+    //当前选中角色 返回Array<string>
+    let grantRoles = this.roleArray.filter(res => res.v).map(res => res.name);
+    //当前选中权限 返回Array<string>
+    let grantPermission = this.permission.array
+      .filter(res => res.v)
+      .map(res => res.name);
+    let postData: UserAndRoleRoot = {
+      id,
+      grantRoles,
+      grantPermission
+    };
+    updateUserIsRoleAndPermission(postData).then(res => {
+      this.digRole = false;
+      this.getList();
+    });
+  }
+
+  //获取所有角色
+  async getRoles() {
+    return await getBaseRoles();
+  }
+  //所有权限
+  private permission = {
+    checkList: [],
+    array: new Array<any>()
+  };
+  //初始化所有权限
+  constructor() {
+    super();
+    let t = UserModule.auth.policies;
+    for (let item in t) {
+      this.permission.array.push({ name: item, v: false });
+    }
+  }
+  //#endregion
 
   private handleFilter() {
     this.listQuery.page = 1;
@@ -333,16 +483,35 @@ export default class extends Vue {
 
   private rules = {
     name: [{ required: true, message: "name is required", trigger: "change" }],
-    password: [{ validator: validatePass, trigger: "blur" }]
+    userName: [
+      { required: true, message: "userName is required", trigger: "change" }
+    ],
+    phoneNumber: [
+      { required: true, message: "phone is invalid", trigger: "change" }
+    ],
+    surname: [
+      { required: true, message: "surname is required", trigger: "change" }
+    ],
+    password: [{ validator: validatePass, trigger: "change" }],
+    email: [
+      {
+        type: "email",
+        required: true,
+        message: "请输入正确的邮箱",
+        trigger: "change"
+      }
+    ]
   };
 
   //#endregion
 }
 //#region "自定义表单验证"
 var validatePass = (rule: any, value: string, callback: any) => {
-  if(value.length<6)
-    callback('密码不得少于6位')
-
+  if (!regex.loginPass.test(value))
+    callback(
+      "至少8-16个字符，至少1个大写字母，1个小写字母和1个数字，其他可以是任意字符："
+    );
+  else callback();
 };
 
 //#endregion

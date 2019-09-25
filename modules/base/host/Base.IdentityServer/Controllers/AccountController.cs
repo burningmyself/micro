@@ -29,6 +29,8 @@ using Volo.Abp.PermissionManagement;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Uow;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
+using Volo.Abp.Identity.EntityFrameworkCore;
 
 namespace Base.Controllers
 {
@@ -48,9 +50,30 @@ namespace Base.Controllers
             get; set;
         }
 
-
-
     }
+
+    /// <summary>
+    /// 用户权限及角色
+    /// </summary>
+    public class RoleAndPermissionByUser:RolePerssionReq
+    {
+        public string[] grantRoles
+        {
+            get;set;
+        }
+    }
+
+
+    public class UserRole:IdentityUserRole
+    {
+        public UserRole(Guid UserId,Guid RoleId)
+        {
+            this.UserId = UserId;
+            this.RoleId = RoleId;
+        }
+    }
+
+
 
 
     [RemoteService]
@@ -69,14 +92,16 @@ namespace Base.Controllers
         private readonly IAbpAuthorizationService _authorizationService;
         private readonly IPermissionDefinitionManager _permissionDefinitionManager;
         private readonly IRepository<PermissionGrant> _permissionGrant;
-
+        private readonly IRepository<IdentityUser> _identityUser;
         private readonly IRepository<IdentityRole> _identityRole;
+
 
         public AccountController(IdentityUserManager userManager,
             IConfigurationAccessor configurationAccessor,
             ICurrentTenant currentTenant,
             IOptions<AspNetCoreMultiTenancyOptions> options,
             IProfileAppService profileAppService,
+            IRepository<IdentityUser> identityUser,
             IIdentityRoleAppService roleAppService,
             IIdentityUserAppService userAppService,
             IAbpAuthorizationPolicyProvider abpAuthorizationPolicyProvider,
@@ -85,7 +110,7 @@ namespace Base.Controllers
             IPermissionDefinitionManager permissionDefinitionManager,
             IRepository<IdentityRole> identityRole
             )
-        {
+        { 
             _userManager = userManager;
             _currentTenant = currentTenant;
             _aspNetCoreMultiTenancyOptions = options.Value;
@@ -98,8 +123,60 @@ namespace Base.Controllers
             _permissionDefinitionManager = permissionDefinitionManager;
             //_authenticator = authenticator;
             _permissionGrant = permissionGrant;
+            _identityUser = identityUser;
             _identityRole = identityRole;
+
+            
         }
+
+
+        [HttpGet("permission/{Id:guid}")]
+        public async Task<IEnumerable<string>> getUserGrantPermission([FromRoute]string Id)=>
+            //获取当前user权限
+             _permissionGrant.Where(res => res.ProviderName == "User"&&res.ProviderKey == Id).ToList().Select(res=>res.ProviderKey);
+
+
+        [UnitOfWork]
+        [HttpPost("userPermission")]
+        public async Task updateUserIsRoleAndPermission([FromBody]RoleAndPermissionByUser req)
+        {
+            string uId = req.Id.ToString();
+            //清除当前user权限
+            await _permissionGrant.DeleteAsync(res => res.ProviderName == "User" && res.ProviderKey == uId);
+            //添加当前用户权限
+            await addUserPermission(req.grantPermission, uId);
+            //添加当前角色
+            await _userAppService.UpdateRolesAsync(req.Id, new IdentityUserUpdateRolesDto() { RoleNames = req.grantRoles});
+        }
+
+
+        private async Task addUserPermission(IEnumerable<string> req,string uId)
+        {
+            req.ToList().ForEach(async res =>
+            {
+                await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(), res, "User", uId));
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /// <summary>
