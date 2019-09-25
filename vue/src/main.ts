@@ -6,7 +6,7 @@ import SvgIcon from 'vue-svgicon'
 
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
-
+///<reference path="./regex.ts" />
 import App from '@/App.vue'
 import store from '@/store'
 import { AppModule } from '@/store/modules/app'
@@ -35,7 +35,7 @@ Object.keys(directives).forEach(key => {
 
 // Register global filter functions
 Object.keys(filters).forEach(key => {
-  Vue.filter(key, (filters as { [key: string ]: Function })[key])
+  Vue.filter(key, (filters as { [key: string]: Function })[key])
 })
 
 Vue.config.productionTip = false

@@ -342,7 +342,6 @@ export default class extends Vue {
 var validatePass = (rule: any, value: string, callback: any) => {
   if(value.length<6)
     callback('密码不得少于6位')
-  else if
 
 };
 
