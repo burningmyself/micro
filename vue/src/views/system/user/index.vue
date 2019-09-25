@@ -14,9 +14,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >
-        {{$t('table.search')}}
-      </el-button>
+      >{{$t('table.search')}}</el-button>
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
@@ -33,7 +31,7 @@
         highlight-current-row
         style="width: 100%;"
       >
-      <el-table-column
+        <el-table-column
           :label="$t('user.id')"
           prop="id"
           sortable="custom"
@@ -89,7 +87,7 @@
             <span>{{ scope.row.twoFactorEnabled }}</span>
           </template>
         </el-table-column>
-         <el-table-column :label="$t('User.lockoutEnabled')" width="80px" align="center">
+        <el-table-column :label="$t('User.lockoutEnabled')" width="80px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.lockoutEnabled }}</span>
           </template>
@@ -155,9 +153,6 @@
           <el-form-item :label="$t('User.lockoutEnabled')" prop="lockoutEnabled">
             <el-input v-model="tempUserData.lockoutEnabled" />
           </el-form-item>
-          <el-form-item :label="$t('User.roleNames')" prop="roleNames">
-            <el-input v-model="tempUserData.roleNames" />
-          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('User.cancel') }}</el-button>
@@ -187,19 +182,18 @@ import { cloneDeep } from "lodash";
 import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
-import { getUsers, updateUser, createUser,deleteUser } from "@/api/users";
+import { getUsers, updateUser, createUser, deleteUser } from "@/api/users";
 
 interface IUserData {
   id: string;
   name: string;
-  roleNames: [];
   password: string;
   userName: string;
   surname: string;
   email: string;
   phoneNumber: string;
   twoFactorEnabled: boolean;
-  lockoutEnabled: boolean
+  lockoutEnabled: boolean;
 }
 const defaultUserData: IUserData = {
   id: "",
@@ -211,7 +205,7 @@ const defaultUserData: IUserData = {
   email: "",
   phoneNumber: "",
   twoFactorEnabled: false,
-  lockoutEnabled: false 
+  lockoutEnabled: false
 };
 
 @Component({
@@ -242,13 +236,10 @@ export default class extends Vue {
 
   private dialogPageviewsVisible = false;
   private pageviewsData = [];
-  private rules = {
-    name: [{ required: true, message: "name is required", trigger: "change" }]
-  };
 
   private handleFilter() {
-    this.listQuery.page = 1
-    this.getList()
+    this.listQuery.page = 1;
+    this.getList();
   }
   private resetTempUserData() {
     this.tempUserData = cloneDeep(defaultUserData);
@@ -261,71 +252,71 @@ export default class extends Vue {
       (this.$refs["dataForm"] as Form).clearValidate();
     });
   }
- private createData() {
-    (this.$refs['dataForm'] as Form).validate(async(valid) => {
+  private createData() {
+    (this.$refs["dataForm"] as Form).validate(async valid => {
       if (valid) {
-        let { id,roleNames,...UserData } = this.tempUserData
-        const data  = await createUser(UserData)
-        this.list.unshift(data)
-        this.dialogFormVisible = false
+        let { id, roleNames, ...UserData } = this.tempUserData;
+        const data = await createUser(UserData);
+        this.list.unshift(data);
+        this.dialogFormVisible = false;
         this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
+          title: "成功",
+          message: "创建成功",
+          type: "success",
           duration: 2000
-        })
+        });
       }
-    })
+    });
   }
   private handleUpdate(row: any) {
-    this.tempUserData = Object.assign({}, row)
-    this.dialogStatus = 'update'
-    this.dialogFormVisible = true
+    this.tempUserData = Object.assign({}, row);
+    this.dialogStatus = "update";
+    this.dialogFormVisible = true;
     this.$nextTick(() => {
-      (this.$refs['dataForm'] as Form).clearValidate()
-    })
+      (this.$refs["dataForm"] as Form).clearValidate();
+    });
   }
- private updateData() {
-    (this.$refs['dataForm'] as Form).validate(async(valid) => {
+  private updateData() {
+    (this.$refs["dataForm"] as Form).validate(async valid => {
       if (valid) {
-        const tempData = Object.assign({}, this.tempUserData)
-        const data = await updateUser(tempData.id, tempData)
+        const tempData = Object.assign({}, this.tempUserData);
+        const data = await updateUser(tempData.id, tempData);
         for (const v of this.list) {
           if (v.id === data.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1, data)
-            break
+            const index = this.list.indexOf(v);
+            this.list.splice(index, 1, data);
+            break;
           }
         }
-        this.dialogFormVisible = false
+        this.dialogFormVisible = false;
         this.$notify({
-          title: '成功',
-          message: '更新成功',
-          type: 'success',
+          title: "成功",
+          message: "更新成功",
+          type: "success",
           duration: 2000
-        })
+        });
       }
-    })
+    });
   }
   private handleModifyStatus() {}
 
   private handleGetPageviews() {}
 
-  private handleDelete(row:any) {
-    const data = deleteUser(row.id)
-    if(data){
-      this.list = this.list.filter(r=>r!==row)
+  private handleDelete(row: any) {
+    const data = deleteUser(row.id);
+    if (data) {
+      this.list = this.list.filter(r => r !== row);
       this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
+        title: "成功",
+        message: "删除成功",
+        type: "success",
         duration: 2000
-      })
+      });
     }
   }
-  private tempUserData=defaultUserData
+  private tempUserData = defaultUserData;
   created() {
-    this.getList();   
+    this.getList();
   }
   private async getList() {
     this.listLoading = true;
@@ -337,5 +328,23 @@ export default class extends Vue {
       this.listLoading = false;
     }, 0.5 * 1000);
   }
+
+  //#region "表单验证"
+
+  private rules = {
+    name: [{ required: true, message: "name is required", trigger: "change" }],
+    password: [{ validator: validatePass, trigger: "blur" }]
+  };
+
+  //#endregion
 }
+//#region "自定义表单验证"
+var validatePass = (rule: any, value: string, callback: any) => {
+  if(value.length<6)
+    callback('密码不得少于6位')
+  else if
+
+};
+
+//#endregion
 </script>
