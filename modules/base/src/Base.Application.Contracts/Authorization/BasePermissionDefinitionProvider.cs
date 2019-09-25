@@ -9,6 +9,7 @@ namespace Base.Authorization
         public override void Define(IPermissionDefinitionContext context)
         {
             //var moduleGroup = context.AddGroup(BasePermissions.GroupName, L("Permission:Base"));
+
         }
 
         private static LocalizableString L(string name)

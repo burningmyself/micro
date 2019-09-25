@@ -133,7 +133,7 @@ namespace Base.Controllers
         [HttpGet("permission/{Id:guid}")]
         public async Task<IEnumerable<string>> getUserGrantPermission([FromRoute]string Id)=>
             //获取当前user权限
-             _permissionGrant.Where(res => res.ProviderName == "User"&&res.ProviderKey == Id).ToList().Select(res=>res.ProviderKey);
+             _permissionGrant.Where(res => res.ProviderName == "User"&&res.ProviderKey == Id).ToList().Select(res=>res.Name);
 
 
         [UnitOfWork]

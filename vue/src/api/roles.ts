@@ -12,6 +12,7 @@ export const getRoles = (params: any) =>
  * 获取所有角色
  */
 export const getBaseRoles = () =>
+
   request({
     url: '/identity/roles',
     method: 'get',

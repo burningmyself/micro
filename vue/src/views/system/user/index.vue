@@ -148,10 +148,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="digRole = false">{{ $t('User.cancel') }}</el-button>
-          <el-button
-            type="primary"
-            @click="submitPermission"
-          >{{ $t('User.confirm') }}</el-button>
+          <el-button type="primary" @click="submitPermission">{{ $t('User.confirm') }}</el-button>
         </div>
       </el-dialog>
 
@@ -217,6 +214,8 @@ import { cloneDeep } from "lodash";
 import { exportJson2Excel } from "@/utils/excel";
 import { formatJson } from "@/utils";
 import Pagination from "@/components/Pagination/index.vue";
+
+import { RoleModule } from "@/store/modules/role";
 import {
   getUsers,
   updateUser,
@@ -302,7 +301,6 @@ export default class extends Vue {
    * 初始化数据
    */
   permissionOpen() {
-    this.digRole = true;
     this.roleArray = [];
     this.grantRoles = [];
     this.userInfo = {};
@@ -313,39 +311,42 @@ export default class extends Vue {
    * 打开弹窗初始化数据
    */
   async handleRole(row: any) {
+    this.digRole = true;
+
     //打开弹窗
     this.permissionOpen();
     this.userInfo = row;
     this.tempUserData = Object.assign({}, row);
-    let data = await this.getRoles();
+    let data_v = await this.getRoles();
     //获取当前用户角色
     let roles = await getPermissionByUserId(row.id);
+
     let array: any = [];
     let arrayNULL: any = [];
-    data.items.map(xs => {
-      roles.items.map(x => {
-        let item = {
-          id: xs.id,
-          name: xs.name,
-          v: false
-        };
-        if (item.name == x.name) {
-          item.v = true;
-        }
-        array.push(item);
-      });
+
+    data_v.items.map(xs => {
       let item = {
         id: xs.id,
         name: xs.name,
         v: false
       };
-      arrayNULL.push(item);
+      if (!!roles.items.find(res => res.name == xs.name)) {
+        item.v = true;
+      }
+      array.push(item);
     });
 
     if (array.length != 0) this.roleArray = array;
     else this.roleArray = arrayNULL;
     //获取当前用户权限
     let per = await getUserGrantPermission(row.id);
+    this.permission.array = this.permission.array.map(x => {
+      let d = per.find(res => res == x.name);
+      if (!!d) {
+        x.v = true;
+      }
+      return x;
+    });
   }
 
   submitPermission() {
@@ -364,6 +365,7 @@ export default class extends Vue {
     };
     updateUserIsRoleAndPermission(postData).then(res => {
       this.digRole = false;
+      this.permissionOpen();
       this.getList();
     });
   }

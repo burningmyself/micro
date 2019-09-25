@@ -1,9 +1,6 @@
 <template>
   <div :class="{'has-logo': showLogo}">
-    <sidebar-logo
-      v-if="showLogo"
-      :collapse="isCollapse"
-    />
+    <sidebar-logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -28,58 +25,94 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { AppModule } from '@/store/modules/app'
-import { PermissionModule } from '@/store/modules/permission'
-import { SettingsModule } from '@/store/modules/settings'
-import SidebarItem from './SidebarItem.vue'
-import SidebarLogo from './SidebarLogo.vue'
-import variables from '@/styles/_variables.scss'
+import { Component, Prop, Vue, Model } from "vue-property-decorator";
+import { AppModule } from "@/store/modules/app";
+import { PermissionModule } from "@/store/modules/permission";
+import { SettingsModule } from "@/store/modules/settings";
+import SidebarItem from "./SidebarItem.vue";
+import SidebarLogo from "./SidebarLogo.vue";
+import variables from "@/styles/_variables.scss";
+import { UserModule } from "../../../store/modules/user";
+
+interface Root {
+  children: Array<Root>;
+  path: string;
+  name: string;
+}
 
 @Component({
-  name: 'SideBar',
+  name: "SideBar",
   components: {
     SidebarItem,
     SidebarLogo
   }
 })
 export default class extends Vue {
-  get sidebar() {
-    return AppModule.sidebar
+  constructor() {
+    super();
+    let grantRoutes: Array<string> = this.assset();
+    let routes = this.routes;
+    this.routes = this.fooMenu(grantRoutes, routes);
   }
 
-  get routes() {
-    return PermissionModule.routes
+  assset() {
+    let grantRoutes: Array<string> = [];
+    for (let filed in UserModule.auth.grantedPolicies) grantRoutes.push(filed);
+    return grantRoutes;
   }
+
+  fooMenu(grantRoutes: Array<string>, routes: Array<Root>) {
+    let array: Array<Root> = JSON.parse(JSON.stringify(routes));
+    let obj: Array<Root> = [];
+    for (let i = 0; i < array.length; i++) {
+      let item = array[i];
+      if (grantRoutes.find(g => g == item.name) == undefined) {
+        //array.splice(i, 1);
+      } else {
+        if (item.children != undefined) {
+          item.children = this.fooMenu(grantRoutes, item.children);
+        }
+        obj.push(item);
+      }
+    }
+    return obj;
+  }
+
+  get sidebar() {
+    return AppModule.sidebar;
+  }
+
+  @Model()
+  routes: any = PermissionModule.routes;
 
   get showLogo() {
-    return SettingsModule.showSidebarLogo
+    return SettingsModule.showSidebarLogo;
   }
 
   get menuActiveTextColor() {
     if (SettingsModule.sidebarTextTheme) {
-      return SettingsModule.theme
+      return SettingsModule.theme;
     } else {
-      return variables.menuActiveText
+      return variables.menuActiveText;
     }
   }
 
   get variables() {
-    return variables
+    return variables;
   }
 
   get activeMenu() {
-    const route = this.$route
-    const { meta, path } = route
+    const route = this.$route;
+    const { meta, path } = route;
     // if set path, the sidebar will highlight the path you set
     if (meta.activeMenu) {
-      return meta.activeMenu
+      return meta.activeMenu;
     }
-    return path
+    return path;
   }
 
   get isCollapse() {
-    return !this.sidebar.opened
+    return !this.sidebar.opened;
   }
 }
 </script>
@@ -88,7 +121,8 @@ export default class extends Vue {
 .sidebar-container {
   // reset element-ui css
   .horizontal-collapse-transition {
-    transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+    transition: 0s width ease-in-out, 0s padding-left ease-in-out,
+      0s padding-right ease-in-out;
   }
 
   .scrollbar-wrapper {
@@ -96,7 +130,7 @@ export default class extends Vue {
   }
 
   .el-scrollbar__view {
-    height: 100%
+    height: 100%;
   }
 
   .el-scrollbar__bar {
@@ -113,7 +147,7 @@ export default class extends Vue {
 
 <style lang="scss" scoped>
 .el-scrollbar {
-  height: 100%
+  height: 100%;
 }
 
 .has-logo {

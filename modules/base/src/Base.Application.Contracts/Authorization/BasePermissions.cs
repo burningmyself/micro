@@ -4,7 +4,9 @@ namespace Base.Authorization
 {
     public class BasePermissions
     {
-        public const string GroupName = "Base";
+
+
+
 
         public static string[] GetAll()
         {
