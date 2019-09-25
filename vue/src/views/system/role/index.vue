@@ -119,7 +119,10 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
-          <el-button type="primary" @click="Sub">{{ $t('role.confirm') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus=='create'?createData():updateData()"
+          >{{ $t('role.confirm') }}</el-button>
         </div>
       </el-dialog>
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormPermission">
@@ -139,7 +142,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
+          <el-button @click="dialogFormPermission = false">{{ $t('role.cancel') }}</el-button>
           <el-button type="primary" @click="Sub">{{ $t('role.confirm') }}</el-button>
         </div>
       </el-dialog>
@@ -206,9 +209,12 @@ export default class extends Vue {
     let t = this.permission.array;
     let filterData = t.filter(x => x.v);
     let subData = filterData.map(x => x.t);
-    editRolePermission({id:this.roleid,grantPermission:subData}).then(res => {
-      debugger;
-    });
+    editRolePermission({ id: this.roleid, grantPermission: subData }).then(
+      res => {
+        this.dialogFormPermission = false;
+        this.handleFilter()
+      }
+    );
   }
 
   private roleid!: string;
@@ -298,7 +304,7 @@ export default class extends Vue {
     this.permission;
     this.tempRoleData = Object.assign({}, row);
     this.dialogStatus = "permission";
-    this.roleid = row.id
+    this.roleid = row.id;
     this.dialogFormPermission = true;
     this.$nextTick(() => {
       (this.$refs["PermissionForm"] as Form).clearValidate();
