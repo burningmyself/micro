@@ -8,7 +8,9 @@ namespace Base.Authorization
     {
         public override void Define(IPermissionDefinitionContext context)
         {
-            //var moduleGroup = context.AddGroup(BasePermissions.GroupName, L("Permission:Base"));
+            var homeModule = context.AddGroup(BasePermissions.Home);
+
+            homeModule.AddPermission(BasePermissions.HomeModule.Console);
 
         }
 

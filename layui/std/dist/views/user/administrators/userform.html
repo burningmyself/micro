@@ -1,0 +1,122 @@
+<div class="layui-container">
+	<div class="layui-row">
+
+		<div style="width: 80%;padding-top:20px;" class="">
+			<form lay-filter='example' class="layui-form" action="">
+
+
+
+				<div  class="layui-form-item">
+					<label class="layui-form-label">用户名</label>
+					<div class="layui-input-block">
+						<input type="text" id="userName" name="userName" required placeholder="用户名" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">邮箱</label>
+					<div class="layui-input-block">
+						<input type="text" id="email" name="email" required placeholder="邮箱" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+
+				<div  class="layui-form-item">
+					<label class="layui-form-label">登录密码</label>
+					<div class="layui-input-block">
+						<input type="password" id="password" name="password"  placeholder="登录密码" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div  class="layui-form-item">
+					<label class="layui-form-label">电话</label>
+					<div class="layui-input-block">
+						<input type="text" id="phoneNumber" name="phoneNumber" required placeholder="电话" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+
+
+
+				<div style="display: none;" class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" id="LAY-user-role-submit" lay-submit lay-filter="formDemo">提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+	layui.config({
+		base: '../../../layuiadmin/', //静态资源所在路径
+
+	}).extend({
+		index: 'lib/index', //主入口模块
+
+	}).use(['form', 'index', 'laydate'], function() {
+		var form = layui.form,
+			upload = layui.upload,
+			laydate = layui.laydate;
+		$ = layui.$;
+
+
+		//执行一个laydate实例
+		laydate.render({
+			elem: '#startTime' //指定元素
+		});
+
+		//执行一个laydate实例
+		laydate.render({
+			elem: '#endTime' //指定元素
+		});
+
+		function global() {
+			$('#user').hide()
+			$('#product').hide()
+		}
+
+		function user() {
+			$('#user').show()
+			$('#product').hide()
+		}
+
+		function product() {
+			$('#user').hide()
+			$('#product').show()
+		}
+		global()
+
+		form.on('select(type)', function(data) {
+			if (data.value == "1") {
+				global()
+			} else if (data.value == "2") {
+				product()
+			} else {
+				user()
+			}
+		})
+
+		form.render()
+
+
+	})
+
+	function child(data) {
+		layui.use(['form'], function() {
+			var form = layui.form,
+				$ = layui.$;
+			form.val('example', { ...data
+			})
+			$('#type').attr("disabled", true)
+			form.render()
+		})
+	}
+
+	function getId(id) {
+		return document.getElementById(id)
+	}
+</script>
+<style>
+	#app {}
+</style>
