@@ -31,6 +31,7 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Uow;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Base.IdentityServer;
 
 namespace Base.Controllers
 {
@@ -44,6 +45,8 @@ namespace Base.Controllers
 
     public class RolePerssionReq:EntityDto<Guid>
     {
+
+        public string Name { get; set; }
 
         public List<string> grantPermission
         {
@@ -72,7 +75,21 @@ namespace Base.Controllers
             this.RoleId = RoleId;
         }
     }
+    public class UpdateOrCreateUserDto : EntityDto<Guid>
+    {
 
+        public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string UserName { get; set; }
+
+        public string Password { get; set; }
+
+        public string[] Roles { get; set; }
+
+        public string[] Permissions { get; set; }
+    }
 
 
 
@@ -80,7 +97,10 @@ namespace Base.Controllers
     [Route("/api/[controller]/[action]")]
     public class AccountController : AbpController
     {
+
+        private readonly Microsoft.AspNetCore.Identity.UserManager<IdentityUser> _Uu;
         private readonly IdentityUserManager _userManager;
+        private readonly IdentityRoleManager _roleManager;
         private readonly IConfiguration _configuration;
         private readonly ICurrentTenant _currentTenant;
         private readonly AspNetCoreMultiTenancyOptions _aspNetCoreMultiTenancyOptions;
@@ -99,6 +119,7 @@ namespace Base.Controllers
         public AccountController(IdentityUserManager userManager,
             IConfigurationAccessor configurationAccessor,
             ICurrentTenant currentTenant,
+            IdentityRoleManager roleManager,
             IOptions<AspNetCoreMultiTenancyOptions> options,
             IProfileAppService profileAppService,
             IRepository<IdentityUser> identityUser,
@@ -108,10 +129,12 @@ namespace Base.Controllers
             IAbpAuthorizationService authorizationService,
             IRepository<PermissionGrant> permissionGrant,
             IPermissionDefinitionManager permissionDefinitionManager,
-            IRepository<IdentityRole> identityRole
+            IRepository<IdentityRole> identityRole,
+           Microsoft.AspNetCore.Identity.UserManager<IdentityUser> Uu
             )
         { 
             _userManager = userManager;
+            _Uu = Uu;
             _currentTenant = currentTenant;
             _aspNetCoreMultiTenancyOptions = options.Value;
             _configuration = configurationAccessor.Configuration;
@@ -126,7 +149,7 @@ namespace Base.Controllers
             _identityUser = identityUser;
             _identityRole = identityRole;
 
-            
+            _roleManager = roleManager;   
         }
 
 
@@ -176,6 +199,39 @@ namespace Base.Controllers
 
 
 
+        /// <summary>
+        /// 创建用户
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        [HttpPost("createUser")]
+        public async Task<bool> CreateUser([FromBody]UpdateOrCreateUserDto req)
+        {
+            var dto = await _userAppService.CreateAsync(new IdentityUserCreateDto()
+            {
+                Email = req.Email,
+                UserName = req.UserName,
+                RoleNames = req.Roles,
+                Password = "1q2w3E*",
+                PhoneNumber = req.PhoneNumber
+            });
+
+            var user = await _identityUser.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+
+            await UserManagerExtensions.ChangePasswordAsync1(_Uu, user, req.Password);
+
+
+            await _permissionGrant.DeleteAsync(r => r.ProviderName == "user" && r.ProviderKey == user.Id.ToString());
+            foreach (var item in req.Permissions)
+            {
+                await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(), item, "User", user.Id.ToString()));
+            }
+
+            return true;
+        }
+
 
 
 
@@ -210,12 +266,50 @@ namespace Base.Controllers
             };
         }
 
+        /// <summary>
+        /// 修改用户信息，角色，用户权限
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        [HttpPost("updateUser")]
+        public async Task<bool> UpdateUser([FromBody]UpdateOrCreateUserDto req)
+        {
+            //update password
+            // await _userManager.AddPasswordAsync(await _userManager.GetByIdAsync(req.Id), req.Password);
+
+            //update info
+            var user = await _identityUser.FirstOrDefaultAsync(x => x.Id == req.Id);
+
+            await _userManager.SetUserNameAsync(user, req.UserName);
+
+            await _userManager.SetEmailAsync(user, req.Email);
+
+            await _userManager.SetPhoneNumberAsync(user, req.PhoneNumber);
+
+            await _userManager.SetRolesAsync(user, req.Roles);
+            if (!req.Password.Contains("AQAAAAEAACcQAAAAE"))
+                await UserManagerExtensions.ChangePasswordAsync1(_Uu, user, req.Password);
+
+            //update user permission
+
+            await _permissionGrant.DeleteAsync(r => r.ProviderName == "user" && r.ProviderKey == req.Id.ToString());
+            foreach (var item in req.Permissions)
+            {
+                await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(), item, "User", req.Id.ToString()));
+            }
+
+            return true;
+        }
+
+
         [UnitOfWork]
         [HttpPost]
         public async Task UpdateRoleGrantPermission([FromBody]RolePerssionReq req)
         {
             //get当前角色
             IdentityRole role = await _identityRole.FirstOrDefaultAsync(res=>res.Id == req.Id);
+            await _roleManager.SetRoleNameAsync(role, req.Name);
             //清楚当前用户所有权限
             await _permissionGrant.DeleteAsync(r => r.ProviderKey == role.Name);
             //加入权限
@@ -223,6 +317,7 @@ namespace Base.Controllers
             {
                 await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(),res, "Role",role.Name));
             });
+            await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
         /// <summary>
