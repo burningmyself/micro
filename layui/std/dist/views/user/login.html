@@ -26,11 +26,11 @@
         <div class="layui-form-item">
           <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
           <input type="text" name="userNameOrEmailAddress" id="LAY-user-login-username" lay-verify="required"
-            placeholder="用户名" class="layui-input">
+            placeholder="用户名" value="admin" class="layui-input">
         </div>
         <div class="layui-form-item">
           <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-          <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码"
+          <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" value="1q2w3E*"
             class="layui-input">
         </div>
         <div class="layui-form-item">
@@ -113,16 +113,25 @@
       //提交
       form.on('submit(LAY-user-login-submit)', function (obj) {
         layui.login(obj.field).success(res => {
-          if (res.code != 10000) return
-          localStorage.setItem('token', res.data.access_token)
-          //登入成功的提示与跳转
-          layer.msg('登入成功', {
-            offset: '15px',
-            icon: 1,
-            time: 1000
-          }, function () {
-            location.href = '../'; //后台主页
-          });
+          if (res.code == 10000) {
+            localStorage.setItem('token', res.data.access_token)
+            //登入成功的提示与跳转
+            layer.msg('登入成功', {
+              offset: '15px',
+              icon: 1,
+              time: 1000
+            }, function () {
+              location.href = '../'; //后台主页
+            });
+          }else{
+            layer.msg('密码错误', {
+              offset: '15px',
+              icon: 2,
+              time: 1000
+            }, function () {
+              
+            });
+          }          
         })
 
       });
