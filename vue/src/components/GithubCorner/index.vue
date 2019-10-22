@@ -1,6 +1,6 @@
 <template>
   <a
-    href="https://github.com/burningmyself/vue-typescript-admin-template"
+    href="https://github.com/burningmyself/micro"
     target="_blank"
     class="github-corner"
     aria-label="View source on Github"
