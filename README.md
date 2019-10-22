@@ -15,8 +15,9 @@ modules 微服务模块
     public: 公用模块
             Unite 统一通用库
 
-vue 前端应用
-    前端框架计划写一套阿里的[ant.design](https://ant.design/index-cn),这框架支持(React,Angular,Vue)，更适合企业级前端开发
+vue 后台 vue-element-admin typescript
+layui 后台layui
+    前端框架计划写一套阿里的[ant.design](https://ant.design/index-cn),这框架支持(React,Angular,Vue)，更适合企业级前端开发 (代码量大)
 
 ## 贡献
 

@@ -233,6 +233,7 @@ import { UserModule } from "../../../store/modules/user";
 interface IUserData {
   id: string;
   name: string;
+  roleNames: [];
   password: string;
   userName: string;
   surname: string;
