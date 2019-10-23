@@ -351,7 +351,8 @@ namespace Base.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetAccessToken(UserLoginInfo login)
+        [HttpPost]
+        public async Task<IActionResult> Token(UserLoginInfo login)
         {
             await ReplaceEmailToUsernameOfInputIfNeeds(login);
 
@@ -363,12 +364,12 @@ namespace Base.Controllers
                 GrantType = OidcConstants.GrantTypes.Password,
                 UserName = login.UserNameOrEmailAddress,
                 UserPassword = login.Password,
-                Scope = "Pay"
+                Scope = "offline_access Base"
             };
 
             string token = await _authenticator.GetAccessTokenAsync(config);
 
-            return Json(new { code = 1, data = token });
+            return Json(new { code = 10000, data = token });
         }
         [HttpPost]
         public async Task<IActionResult> Info()
