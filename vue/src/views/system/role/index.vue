@@ -199,6 +199,7 @@ const defaultRoleData: IRoleData = {
 export default class extends Vue {
   constructor() {
     super();
+
     let t = UserModule.auth.policies;
     for (let item in t) {
       this.permission.array.push({ t: item, v: false });
@@ -212,13 +213,13 @@ export default class extends Vue {
     editRolePermission({ id: this.roleid, grantPermission: subData }).then(
       res => {
         this.dialogFormPermission = false;
-        this.handleFilter()
+        this.handleFilter();
       }
     );
   }
 
   private roleid!: string;
-  private currentGrantPermission: Array<string> = RoleModule.grantPermission;
+  private currentGrantPermission: Array<string> =[]
 
   private tableKey = 0;
   private listLoading = true;

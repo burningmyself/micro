@@ -5,10 +5,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+///<reference path="./regex.ts" />
+
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  name: 'App'
+  name: "App"
 })
 export default class extends Vue {}
 </script>

@@ -1,0 +1,185 @@
+<div class="layui-container">
+	<div class="layui-row">
+
+		<div style="width: 80%;padding-top:20px;" class="">
+			<form lay-filter='example' class="layui-form" action="">
+				<div class="layui-form-item">
+					<label class="layui-form-label">登录名</label>
+					<div class="layui-input-block">
+						<input type="text" name="userName" required lay-verify="required" placeholder="请输入登录名" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">登录密码</label>
+					<div class="layui-input-block">
+						<input type="password" name="password" required lay-verify="required" placeholder="请输入登录密码" autocomplete="off"
+						 class="layui-input">
+					</div>
+				</div>
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">邮箱</label>
+					<div class="layui-input-block">
+						<input type="email" lay-verify="email"  name="email" required lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">电话号码</label>
+					<div class="layui-input-block">
+						<input type="number" lay-verify="phone" name="phoneNumber" required lay-verify="required" placeholder="请输入电话号码" autocomplete="off"
+						 class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">角色组</label>
+					<div id="permission" class="layui-input-block">
+					</div>
+				</div>
+
+
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">用户权限</label>
+					<div id="userPermission" class="layui-input-block">
+					</div>
+				</div>
+				<div style="display: none;" class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" id="LAY-user-role-submit" lay-submit lay-filter="formDemo">提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+	function child(obj) {
+		layui.config({
+			base: '../../../layuiadmin/', //静态资源所在路径
+
+		}).extend({
+			index: 'lib/index', //主入口模块
+			getUserGrantPermission: '../../app/identity',
+			getAllRoles: '../../app/identity',
+			userPermission: '../../app/identity',
+			updateUser: '../../app/identity',
+			deleteRole: '../../app/identity',
+			deleteUser: '../../app/identity',
+			api:'../../app/config'
+
+		}).use(['form', 'index','api', 'getUserGrantPermission', 'getAllRoles', 'userPermission', 'updateUser',"deleteRole","deleteUser"], function() {
+			var form = layui.form,
+				get = layui.getUserGrantPermission,
+				getAllRoles = layui.getAllRoles,
+				menu = layui.data('menu').data,
+				userPermission = layui.userPermission,
+				$ = layui.$;
+
+
+			if (!!obj) {
+				userPermission(obj.id).success(function(data) {
+
+
+					let dom = ''
+
+					if (data.length == 0) {
+						for (var i = 0; i < menu.length; i++) {
+							let key = menu[i]
+
+							dom +=
+								`
+					    <input type="checkbox" name="1-${key}" title="${key}" >
+					`
+						}
+					} else {
+
+						for (var i = 0; i < menu.length; i++) {
+							let key = menu[i]
+
+							dom +=
+								`
+					    <input type="checkbox" name="1-${key}" title="${key}" ${data.filter(x=>x === key).length > 0 ?'checked' :''}>
+					`
+						}
+					}
+					$('#userPermission').append(dom)
+
+				})
+				// menu = layui.data('menu').data
+				get(obj.id).success(function(res) {
+					let dom = ''
+
+					getAllRoles().success(function(data) {
+						data.items.map(x => {
+							dom +=
+								`<input type="checkbox" name="2-${x.name}" title="${x.name}" ${res.items.filter(y=>y.name === x.name).length>0?'checked':''} >`
+							return
+						})
+
+						$('#permission').append(dom)
+						form.render()
+					})
+
+
+				})
+
+
+				//表单初始赋值
+
+				// let dom = ''
+				// for (var i = 0; i < menu.length; i++) {
+				//     let key = menu[i]
+				//     dom +=
+				//         `
+				// 	    <input type="checkbox" name="${key}" title="${key}" ${obj.grantPermission.filter(x=>x === key).length > 0 ?'checked' :''}>
+				// 	`
+				// }
+				// $('#permission').append(dom)
+				form.val('example', {
+					...obj
+				})
+				return
+			}
+			let dom = ''
+			for (var i = 0; i < menu.length; i++) {
+				let key = menu[i]
+
+				dom +=
+					`
+					    <input type="checkbox" name="1-${key}" title="${key}" >
+					`
+			}
+
+			$('#userPermission').append(dom)
+			getAllRoles().success(function(data) {
+				dom = ''
+				data.items.map(x => {
+					dom +=
+						`<input type="checkbox" name="2-${x.name}" title="${x.name}"  >`
+					return
+				})
+
+				$('#permission').append(dom)
+				form.render()
+			})
+
+
+
+
+
+
+			form.render()
+
+
+		})
+	}
+</script>
+<style>
+	#app {}
+</style>

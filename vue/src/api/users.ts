@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { Interface } from 'readline'
 
 export const getUsers = (params: any) =>
   request({
@@ -20,11 +21,11 @@ export const getUserByName = (username: string) =>
     method: 'get'
   })
 
-  export const getUserByEmail = (username: string) =>
+export const getUserByEmail = (username: string) =>
   request({
     url: `/identity/users/by-email/${username}`,
     method: 'get'
-  })  
+  })
 
 export const updateUser = (username: string, data: any) =>
   request({
@@ -58,3 +59,33 @@ export const createUser = (data: any) =>
     method: 'post',
     data
   })
+
+
+
+export const getUserGrantPermission = (data: string) =>
+  request({
+    url: '/Account/getUserGrantPermission/permission/' + data,
+    method: 'get',
+  })
+
+
+export const getPermissionByUserId = (data: string) =>
+  request({
+    url: `identity/users/${data}/roles`,
+    method: 'get'
+  })
+
+
+export const updateUserIsRoleAndPermission = (data: UserAndRoleRoot) =>
+  request({
+    url: `Account/updateUserIsRoleAndPermission/userPermission`,
+    method: 'post',
+    data
+  })
+
+
+export interface UserAndRoleRoot {
+  grantPermission: Array<string>
+  grantRoles: Array<string>
+  id: string
+}

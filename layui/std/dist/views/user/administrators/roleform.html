@@ -1,0 +1,69 @@
+<div class="layui-container">
+    <div class="layui-row">
+
+        <div style="width: 80%;padding-top:20px;" class="">
+            <form lay-filter='example' class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required lay-verify="required" placeholder="请输入角色名"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限组</label>
+                    <div id="permission" class="layui-input-block">
+                    </div>
+                </div>
+
+                <div style="display: none;" class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="LAY-user-role-submit" lay-submit lay-filter="formDemo">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+    function child(obj) {
+        layui.config({
+            base: '../../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index', //主入口模块、
+        }).use(['form', 'index'], function () {
+            var form = layui.form,
+                $ = layui.$,
+                menu = layui.data('menu').data
+
+            //表单初始赋值
+
+            let dom = ''
+            for (var i = 0; i < menu.length; i++) {
+                let key = menu[i]
+                dom +=
+                    `
+				    <input type="checkbox" name="${key}" title="${key}" ${obj.grantPermission.filter(x=>x === key).length > 0 ?'checked' :''}>
+				`
+            }
+            $('#permission').append(dom)
+            form.val('example', {
+                name: obj.name
+            })
+
+
+
+            form.render()
+
+
+        })
+    }
+</script>
+<style>
+    #app {}
+</style>

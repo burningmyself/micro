@@ -6,7 +6,6 @@ import SvgIcon from 'vue-svgicon'
 
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
-///<reference path="./regex.ts" />
 import App from '@/App.vue'
 import store from '@/store'
 import { AppModule } from '@/store/modules/app'
