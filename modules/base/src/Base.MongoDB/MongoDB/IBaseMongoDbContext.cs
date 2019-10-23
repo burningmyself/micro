@@ -3,7 +3,7 @@ using Volo.Abp.MongoDB;
 
 namespace Base.MongoDB
 {
-    [ConnectionStringName("Base")]
+    [ConnectionStringName(BaseDbProperties.ConnectionStringName)]
     public interface IBaseMongoDbContext : IAbpMongoDbContext
     {
         /* Define mongo collections here. Example:

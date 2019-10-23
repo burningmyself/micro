@@ -13,7 +13,10 @@ namespace Base.EntityFrameworkCore
         {
             Check.NotNull(builder, nameof(builder));
 
-            var options = new BaseModelBuilderConfigurationOptions();
+            var options = new BaseModelBuilderConfigurationOptions(
+                BaseDbProperties.DbTablePrefix,
+                BaseDbProperties.DbSchema
+            );
 
             optionsAction?.Invoke(options);
 

@@ -8,11 +8,13 @@ namespace Base.MongoDB
     {
         public static void ConfigureBase(
             this IMongoModelBuilder builder,
-            Action<MongoModelBuilderConfigurationOptions> optionsAction = null)
+            Action<AbpMongoModelBuilderConfigurationOptions> optionsAction = null)
         {
             Check.NotNull(builder, nameof(builder));
 
-            var options = new BaseMongoModelBuilderConfigurationOptions();
+            var options = new BaseMongoModelBuilderConfigurationOptions(
+                BaseDbProperties.DbTablePrefix
+            );
 
             optionsAction?.Invoke(options);
         }

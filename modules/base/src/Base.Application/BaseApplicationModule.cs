@@ -1,11 +1,13 @@
 ﻿using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
+using Volo.Abp.Application;
 
 namespace Base
 {
     [DependsOn(
         typeof(BaseDomainModule),
         typeof(BaseApplicationContractsModule),
+        typeof(AbpDddApplicationModule),
         typeof(AbpAutoMapperModule)
         )]
     public class BaseApplicationModule : AbpModule
@@ -14,12 +16,7 @@ namespace Base
         {
             Configure<AbpAutoMapperOptions>(options =>
             {
-                /* Using `true` for the `validate` parameter to
-                 * validate the profile on application startup.
-                 * See http://docs.automapper.org/en/stable/Configuration-validation.html for more info
-                 * about the configuration validation. */
-                options.AddProfile<BaseProfile>(validate: true);
-                options.AddProfile<BaseApplicationAutoMapperProfile>(validate: true);
+                options.AddMaps<BaseApplicationModule>(validate: true);
             });
         }
     }

@@ -9,20 +9,14 @@ namespace AdminApiGateway.Host
 {
     public class Startup
     {
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication<AdminApiGatewayModule>(options =>
-            {
-                options.UseAutofac();
-                options.Configuration.UserSecretsAssembly = typeof(Startup).Assembly;
-            });
-
-            return services.BuildServiceProviderFromFactory();
+            services.AddApplication<AdminApiGatewayModule>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-           app.InitializeApplication();
+            app.InitializeApplication();
         }
     }
 }

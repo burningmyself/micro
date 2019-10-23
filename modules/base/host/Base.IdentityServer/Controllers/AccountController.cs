@@ -1,21 +1,14 @@
-﻿using IdentityModel.Client;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using IdentityModel;
-using IdentityServer4;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.Account.Web.Areas.Account.Controllers.Models;
-using Volo.Abp.AspNetCore.MultiTenancy;
-using Volo.Abp.Configuration;
 using Volo.Abp.Identity;
 using Volo.Abp.Validation;
-//using Volo.Abp.IdentityModel;
 using Volo.Abp.MultiTenancy;
-using Volo.Abp.Application.Services;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Users;
 using Volo.Abp.Authorization;
@@ -29,6 +22,9 @@ using Volo.Abp.PermissionManagement;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Uow;
+using Volo.Abp.IdentityModel;
+using IdentityModel;
+using Volo.Abp.AspNetCore.MultiTenancy;
 
 namespace Base.Controllers
 {
@@ -60,8 +56,8 @@ namespace Base.Controllers
         private readonly IdentityUserManager _userManager;
         private readonly IConfiguration _configuration;
         private readonly ICurrentTenant _currentTenant;
-        private readonly AspNetCoreMultiTenancyOptions _aspNetCoreMultiTenancyOptions;
-        //private readonly IIdentityModelAuthenticationService _authenticator;
+        private readonly AbpAspNetCoreMultiTenancyOptions _aspNetCoreMultiTenancyOptions;
+        private readonly IIdentityModelAuthenticationService _authenticator;
         private readonly IProfileAppService _profileAppService;
         private readonly IIdentityRoleAppService _roleAppService;
         private readonly IIdentityUserAppService _userAppService;
@@ -73,14 +69,15 @@ namespace Base.Controllers
         private readonly IRepository<IdentityRole> _identityRole;
 
         public AccountController(IdentityUserManager userManager,
-            IConfigurationAccessor configurationAccessor,
+            IConfiguration configuration,
             ICurrentTenant currentTenant,
-            IOptions<AspNetCoreMultiTenancyOptions> options,
+            IOptions<AbpAspNetCoreMultiTenancyOptions> options,
             IProfileAppService profileAppService,
             IIdentityRoleAppService roleAppService,
             IIdentityUserAppService userAppService,
             IAbpAuthorizationPolicyProvider abpAuthorizationPolicyProvider,
             IAbpAuthorizationService authorizationService,
+            IIdentityModelAuthenticationService authenticator,
             IRepository<PermissionGrant> permissionGrant,
             IPermissionDefinitionManager permissionDefinitionManager,
             IRepository<IdentityRole> identityRole
@@ -89,14 +86,14 @@ namespace Base.Controllers
             _userManager = userManager;
             _currentTenant = currentTenant;
             _aspNetCoreMultiTenancyOptions = options.Value;
-            _configuration = configurationAccessor.Configuration;
+            _configuration = configuration;
             _profileAppService = profileAppService;
             _roleAppService = roleAppService;
             _userAppService = userAppService;
             _abpAuthorizationPolicyProvider = abpAuthorizationPolicyProvider;
             _authorizationService = authorizationService;
             _permissionDefinitionManager = permissionDefinitionManager;
-            //_authenticator = authenticator;
+            _authenticator = authenticator;
             _permissionGrant = permissionGrant;
             _identityRole = identityRole;
         }
@@ -146,49 +143,7 @@ namespace Base.Controllers
             {
                 await _permissionGrant.InsertAsync(new PermissionGrant(Guid.NewGuid(),res, "Role",role.Name));
             });
-        }
-
-        /// <summary>
-        /// DiscoveryClient方法提示在下一个版本被弃用，scope传递offline_access，可得到refresh_token值
-        /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> Token(UserLoginInfo login)
-        {
-            var dico = await DiscoveryClient.GetAsync(_configuration["AuthServer:Authority"]);
-            if (dico.IsError)
-            {
-                Console.WriteLine(dico.Error);
-                return Json(new { code = 0, data = dico.Error });
-            }
-
-            await ReplaceEmailToUsernameOfInputIfNeeds(login);
-
-            var tokenClient = new TokenClient(dico.TokenEndpoint, _configuration["AuthServer:ClientId"], _configuration["AuthServer:ClientSecret"]);
-            TokenResponse tokenresp = await tokenClient.RequestResourceOwnerPasswordAsync(
-                login.UserNameOrEmailAddress,
-                login.Password,
-                "Base",
-                extra: new Dictionary<string, string>
-                {
-                    {_aspNetCoreMultiTenancyOptions.TenantKey,login.TenanId?.ToString()}
-                }
-                );
-            if (tokenresp.IsError)
-            {
-                Console.WriteLine(tokenresp.Error);
-                return Json(new
-                {
-                    code = 0,
-                    data = tokenresp.ErrorDescription,
-                    message = tokenresp.Error
-                });
-            }
-
-            return Json(new { code = 10000, data = tokenresp.Json });
-        }
-
+        }        
         protected virtual async Task ReplaceEmailToUsernameOfInputIfNeeds(UserLoginInfo login)
         {
             if (!ValidationHandler.IsValidEmailAddress(login.UserNameOrEmailAddress))
@@ -221,25 +176,26 @@ namespace Base.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        //public async Task<IActionResult> GetAccessToken(UserLoginInfo login)
-        //{
-        //    await ReplaceEmailToUsernameOfInputIfNeeds(login);
+        [HttpPost]
+        public async Task<IActionResult> GetToken(UserLoginInfo login)
+        {
+            await ReplaceEmailToUsernameOfInputIfNeeds(login);
 
-        //    var config = new IdentityClientConfiguration
-        //    {
-        //        Authority = _configuration["AuthServer:Authority"],
-        //        ClientId = _configuration["AuthServer:ClientId"],
-        //        ClientSecret = _configuration["AuthServer:ClientSecret"],
-        //        GrantType = OidcConstants.GrantTypes.Password,
-        //        UserName = login.UserNameOrEmailAddress,
-        //        UserPassword = login.Password,
-        //        Scope = "Pay"
-        //    };
+            var config = new IdentityClientConfiguration
+            {
+                Authority = _configuration["AuthServer:Authority"],
+                ClientId = _configuration["AuthServer:ClientId"],
+                ClientSecret = _configuration["AuthServer:ClientSecret"],
+                GrantType = OidcConstants.GrantTypes.Password,
+                UserName = login.UserNameOrEmailAddress,
+                UserPassword = login.Password,
+                Scope = "Base"
+            };
 
-        //    string token = await _authenticator.GetAccessTokenAsync(config);
+            string token = await _authenticator.GetAccessTokenAsync(config);
 
-        //    return Json(new { code = 1, data = token });
-        //}
+            return Json(new { code = 1, data = token });
+        }
         [HttpPost]
         public async Task<IActionResult> Info()
         {

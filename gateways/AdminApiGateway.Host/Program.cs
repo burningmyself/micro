@@ -2,10 +2,10 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
-using Volo.Abp.Identity;
 
 namespace AdminApiGateway.Host
 {
@@ -23,7 +23,7 @@ namespace AdminApiGateway.Host
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.WithProperty("Application", "AdminApiGateway")
+                .Enrich.WithProperty("Application", "PublicWebSite")
                 .Enrich.FromLogContext()
                 .WriteTo.File("Logs/logs.txt")
                 .WriteTo.Elasticsearch(
@@ -31,14 +31,14 @@ namespace AdminApiGateway.Host
                     {
                         AutoRegisterTemplate = true,
                         AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                        IndexFormat = "ms-log-{0:yyyy.MM}"
+                        IndexFormat = "msdemo-log-{0:yyyy.MM}"
                     })
                 .CreateLogger();
 
             try
             {
                 Log.Information("Starting AdminApiGateway.Host.");
-                BuildWebHostInternal(args).Run();
+                CreateHostBuilder(args).Build().Run();
                 return 0;
             }
             catch (Exception ex)
@@ -52,14 +52,13 @@ namespace AdminApiGateway.Host
             }
         }
 
-        public static IWebHost BuildWebHostInternal(string[] args) =>
-            new WebHostBuilder()
-                .UseUrls("http://localhost:65115")
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseSerilog()
-                .Build();
+        internal static IHostBuilder CreateHostBuilder(string[] args) =>
+            Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
+                .UseAutofac()
+                .UseSerilog();
     }
 }

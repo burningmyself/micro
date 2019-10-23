@@ -3,11 +3,9 @@ using Volo.Abp.MongoDB;
 
 namespace Base.MongoDB
 {
-    [ConnectionStringName("Base")]
+    [ConnectionStringName(BaseDbProperties.ConnectionStringName)]
     public class BaseMongoDbContext : AbpMongoDbContext, IBaseMongoDbContext
     {
-        public static string CollectionPrefix { get; set; } = BaseConsts.DefaultDbTablePrefix;
-
         /* Add mongo collections here. Example:
          * public IMongoCollection<Question> Questions => Collection<Question>();
          */
@@ -16,10 +14,7 @@ namespace Base.MongoDB
         {
             base.CreateModel(modelBuilder);
 
-            modelBuilder.ConfigureBase(options =>
-            {
-                options.CollectionPrefix = CollectionPrefix;
-            });
+            modelBuilder.ConfigureBase();
         }
     }
 }

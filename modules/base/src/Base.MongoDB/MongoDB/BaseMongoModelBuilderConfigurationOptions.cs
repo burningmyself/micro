@@ -3,11 +3,11 @@ using Volo.Abp.MongoDB;
 
 namespace Base.MongoDB
 {
-    public class BaseMongoModelBuilderConfigurationOptions : MongoModelBuilderConfigurationOptions
+    public class BaseMongoModelBuilderConfigurationOptions : AbpMongoModelBuilderConfigurationOptions
     {
         public BaseMongoModelBuilderConfigurationOptions(
-            [NotNull] string tablePrefix = BaseConsts.DefaultDbTablePrefix)
-            : base(tablePrefix)
+            [NotNull] string collectionPrefix = "")
+            : base(collectionPrefix)
         {
         }
     }

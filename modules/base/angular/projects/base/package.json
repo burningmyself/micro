@@ -1,0 +1,8 @@
+{
+  "name": "base",
+  "version": "0.0.1",
+  "dependencies": {
+    "@abp/ng.theme.shared": "^1.0.2",
+    "base.config": "^0.0.1"
+  }
+}

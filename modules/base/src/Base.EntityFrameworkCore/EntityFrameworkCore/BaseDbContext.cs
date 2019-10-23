@@ -5,19 +5,15 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Base.EntityFrameworkCore
 {
-    [ConnectionStringName("Base")]
+    [ConnectionStringName(BaseDbProperties.ConnectionStringName)]
     public class BaseDbContext : AbpDbContext<BaseDbContext>, IBaseDbContext
     {
-        public static string TablePrefix { get; set; } = BaseConsts.DefaultDbTablePrefix;
-
-        public static string Schema { get; set; } = BaseConsts.DefaultDbSchema;
-
         /* Add DbSet for each Aggregate Root here. Example:
          * public DbSet<Question> Questions { get; set; }
          */
-
         public DbSet<DistrictEntity> Districts { get; set; }
-        public BaseDbContext(DbContextOptions<BaseDbContext> options)
+
+        public BaseDbContext(DbContextOptions<BaseDbContext> options) 
             : base(options)
         {
 
@@ -27,11 +23,7 @@ namespace Base.EntityFrameworkCore
         {
             base.OnModelCreating(builder);
 
-            builder.ConfigureBase(options =>
-            {
-                options.TablePrefix = TablePrefix;
-                options.Schema = Schema;
-            });
+            builder.ConfigureBase();
         }
     }
 }

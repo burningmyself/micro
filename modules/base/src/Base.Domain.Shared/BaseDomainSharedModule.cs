@@ -14,7 +14,7 @@ namespace Base
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<VirtualFileSystemOptions>(options =>
+            Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.AddEmbedded<BaseDomainSharedModule>("Base");
             });
@@ -27,7 +27,7 @@ namespace Base
                     .AddVirtualJson("/Localization/Base");
             });
 
-            Configure<ExceptionLocalizationOptions>(options =>
+            Configure<AbpExceptionLocalizationOptions>(options =>
             {
                 options.MapCodeNamespace("Base", typeof(BaseResource));
             });

@@ -16,7 +16,7 @@ services:
     ports:
       - "51600:80"
 
-  my-project-name:
+  base:
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:80
       - ConnectionStrings__Default=Server=sqlserver;Database=Base_ModuleDb;Trusted_Connection=True;MultipleActiveResultSets=true;User=sa;Password=yourStrong(!)Password;Integrated Security=false

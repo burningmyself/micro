@@ -3,16 +3,13 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>Base</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="Mongo2Go" Version="2.2.11" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="Mongo2Go" Version="2.2.12" />
     <ProjectReference Include="..\..\src\Base.MongoDB\Base.MongoDB.csproj" />
     <ProjectReference Include="..\Base.TestBase\Base.TestBase.csproj" />
   </ItemGroup>

@@ -5,12 +5,12 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Base.EntityFrameworkCore
 {
-    [ConnectionStringName("Base")]
+    [ConnectionStringName(BaseDbProperties.ConnectionStringName)]
     public interface IBaseDbContext : IEfCoreDbContext
     {
         /* Add DbSet for each Aggregate Root here. Example:
          * DbSet<Question> Questions { get; }
          */
-         DbSet<DistrictEntity> Districts { get; }
+        DbSet<DistrictEntity> Districts { get; }
     }
 }

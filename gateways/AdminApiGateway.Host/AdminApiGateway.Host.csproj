@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
@@ -13,25 +13,14 @@
     
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.0.0-dev-00046" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0-dev-00838" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.2.0-alpha0005" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
-    <PackageReference Include="Ocelot" Version="13.8.0-alpha0002" />
-    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Autofac" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi.Client" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.IdentityServer" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="0.19.0" />
-    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="0.19.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>

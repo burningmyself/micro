@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Base.MultiTenancy;
 using StackExchange.Redis;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
@@ -14,9 +16,11 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.Auditing;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Autofac;
+using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.SqlServer;
+using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.IdentityServer.EntityFrameworkCore;
@@ -31,8 +35,6 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Threading;
 using Volo.Abp.UI.Navigation.Urls;
-using System;
-using System.Linq;
 
 namespace Base
 {
@@ -53,6 +55,7 @@ namespace Base
         typeof(AbpPermissionManagementApplicationModule),
         typeof(AbpPermissionManagementHttpApiModule),
         typeof(AbpSettingManagementEntityFrameworkCoreModule),
+        typeof(AbpFeatureManagementApplicationModule),
         typeof(AbpTenantManagementEntityFrameworkCoreModule),
         typeof(AbpTenantManagementApplicationModule),
         typeof(AbpTenantManagementHttpApiModule),
@@ -61,12 +64,10 @@ namespace Base
         )]
     public class BaseIdentityServerModule : AbpModule
     {
-        // 默认的跨域请求策略名称
-        private const string _defaultCorsPolicyName = "Base.Api.Cors";
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
-            var configuration = context.Services.BuildConfiguration();
+            var configuration = context.Services.GetConfiguration();
 
             Configure<AbpDbContextOptions>(options =>
             {
@@ -76,7 +77,7 @@ namespace Base
             context.Services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc("v1", new Info { Title = "Base API", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Base API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.CustomSchemaIds(type => type.FullName);
                 });
@@ -109,6 +110,11 @@ namespace Base
                     options.ApiName = configuration["AuthServer:ApiName"];
                 });
 
+            Configure<AbpDistributedCacheOptions>(options =>
+            {
+                options.KeyPrefix = "Base:";
+            });
+
             context.Services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:Configuration"];
@@ -121,16 +127,6 @@ namespace Base
                     .AddDataProtection()
                     .PersistKeysToStackExchangeRedis(redis, "Base-Protection-Keys");
             }
-            #region "配置 CORS 授权策略"
-            context.Services.AddCors(options => options.AddPolicy(_defaultCorsPolicyName,
-            builder => builder.WithOrigins(
-                    configuration["AllowedHosts"]
-                    .Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray()
-                )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()));
-            #endregion
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -144,6 +140,7 @@ namespace Base
             app.UseHttpsRedirection();
             app.UseCorrelationId();
             app.UseVirtualFiles();
+            app.UseRouting();
             app.UseAuthentication();
             app.UseJwtTokenMiddleware();
             if (MultiTenancyConsts.IsEnabled)
@@ -151,10 +148,8 @@ namespace Base
                 app.UseMultiTenancy();
             }
             app.UseIdentityServer();
+            app.UseAuthorization();
             app.UseAbpRequestLocalization();
-            // 允许跨域请求访问
-            app.UseCors(_defaultCorsPolicyName);
-
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {

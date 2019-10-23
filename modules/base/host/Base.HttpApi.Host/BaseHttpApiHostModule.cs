@@ -1,16 +1,18 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Base.EntityFrameworkCore;
 using Base.MultiTenancy;
 using StackExchange.Redis;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Autofac;
+using Volo.Abp.Caching;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.SqlServer;
 using Volo.Abp.Localization;
@@ -21,7 +23,6 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.Threading;
 using Volo.Abp.Data;
-using Volo.Abp.AspNetCore.Mvc;
 
 namespace Base
 {
@@ -41,21 +42,21 @@ namespace Base
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
-            var configuration = context.Services.BuildConfiguration();
+            var configuration = context.Services.GetConfiguration();
 
             Configure<AbpDbContextOptions>(options =>
             {
                 options.UseSqlServer();
             });
 
-            Configure<MultiTenancyOptions>(options =>
+            Configure<AbpMultiTenancyOptions>(options =>
             {
                 options.IsEnabled = MultiTenancyConsts.IsEnabled;
             });
 
             if (hostingEnvironment.IsDevelopment())
             {
-                Configure<VirtualFileSystemOptions>(options =>
+                Configure<AbpVirtualFileSystemOptions>(options =>
                 {
                     options.FileSets.ReplaceEmbeddedByPhysical<BaseDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}src{0}Base.Domain.Shared", Path.DirectorySeparatorChar)));
                     options.FileSets.ReplaceEmbeddedByPhysical<BaseDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, string.Format("..{0}..{0}src{0}Base.Domain", Path.DirectorySeparatorChar)));
@@ -67,7 +68,7 @@ namespace Base
             context.Services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc("v1", new Info { Title = "Base API", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Base API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.CustomSchemaIds(type => type.FullName);
                 });
@@ -89,6 +90,11 @@ namespace Base
                     options.ApiName = "Base";
                 });
 
+            Configure<AbpDistributedCacheOptions>(options =>
+            {
+                options.KeyPrefix = "Base:";
+            });
+
             context.Services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:Configuration"];
@@ -101,12 +107,6 @@ namespace Base
                     .AddDataProtection()
                     .PersistKeysToStackExchangeRedis(redis, "Base-Protection-Keys");
             }
-            //Configure<AbpAspNetCoreMvcOptions>(options =>
-            //{
-            //    options
-            //        .ConventionalControllers
-            //        .Create(typeof(BaseApplicationModule).Assembly);
-            //});
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -120,7 +120,9 @@ namespace Base
             app.UseHttpsRedirection();
             app.UseCorrelationId();
             app.UseVirtualFiles();
+            app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
             if (MultiTenancyConsts.IsEnabled)
             {
                 app.UseMultiTenancy();

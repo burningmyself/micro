@@ -13,7 +13,7 @@ services:
     depends_on:
       - sqlserver      
   
-  my-project-name:
+  base:
     build:
       context: ../../
       dockerfile: templates/service/host/Base.Host/Dockerfile
