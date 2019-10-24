@@ -175,24 +175,6 @@ namespace Base.Controllers
             });
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// 创建用户
         /// </summary>
@@ -303,7 +285,7 @@ namespace Base.Controllers
         {
             //get当前角色
             IdentityRole role = await _identityRole.FirstOrDefaultAsync(res => res.Id == req.Id);
-            await _roleManager.SetRoleNameAsync(role, req.Name);
+            //await _roleManager.SetRoleNameAsync(role, req.Name);
             //清楚当前用户所有权限
             await _permissionGrant.DeleteAsync(r => r.ProviderKey == role.Name);
             //加入权限

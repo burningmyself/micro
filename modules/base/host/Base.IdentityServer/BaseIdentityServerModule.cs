@@ -139,8 +139,7 @@ namespace Base
                     .Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray()
                 )
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()));
+            .AllowAnyMethod()));
             #endregion
         }
 

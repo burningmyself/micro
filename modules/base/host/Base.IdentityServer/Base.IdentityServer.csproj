@@ -57,4 +57,6 @@
     </None>
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://raw.githubusercontent.com/dolittle/Runtime/master/Schemas/Events/event-horizons.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
