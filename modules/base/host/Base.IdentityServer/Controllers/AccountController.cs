@@ -23,12 +23,11 @@ using Volo.Abp.PermissionManagement;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Uow;
-using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
-using Volo.Abp.Identity.EntityFrameworkCore;
 using Base.IdentityServer;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.IdentityModel;
 using IdentityModel;
+using System.Net.Http;
 
 namespace Base.Controllers
 {
@@ -101,7 +100,6 @@ namespace Base.Controllers
         private readonly IConfiguration _configuration;
         private readonly ICurrentTenant _currentTenant;
         private readonly AbpAspNetCoreMultiTenancyOptions _aspNetCoreMultiTenancyOptions;
-        private readonly IIdentityModelAuthenticationService _authenticator;
         private readonly IProfileAppService _profileAppService;
         private readonly IIdentityRoleAppService _roleAppService;
         private readonly IIdentityUserAppService _userAppService;
@@ -126,7 +124,6 @@ namespace Base.Controllers
             IAbpAuthorizationService authorizationService,
             IRepository<PermissionGrant> permissionGrant,
             IPermissionDefinitionManager permissionDefinitionManager,
-            IIdentityModelAuthenticationService authenticator,
             IRepository<IdentityRole> identityRole,
            Microsoft.AspNetCore.Identity.UserManager<IdentityUser> Uu
             )
@@ -142,7 +139,6 @@ namespace Base.Controllers
             _abpAuthorizationPolicyProvider = abpAuthorizationPolicyProvider;
             _authorizationService = authorizationService;
             _permissionDefinitionManager = permissionDefinitionManager;
-            _authenticator = authenticator;
             _permissionGrant = permissionGrant;
             _identityUser = identityUser;
             _identityRole = identityRole;
@@ -346,31 +342,47 @@ namespace Base.Controllers
             login.UserNameOrEmailAddress = userByEmail.UserName;
         }
 
+       
         /// <summary>
-        /// 官方支持获取AccessToken的写法，传递offline_access也得不到refresh_token,除了改类库源码GetAccessTokenAsync，直接返回tokenResponse
+        /// scope传递offline_access，可得到refresh_token值
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Token(UserLoginInfo login)
         {
-            await ReplaceEmailToUsernameOfInputIfNeeds(login);
-
-            var config = new IdentityClientConfiguration
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync(_configuration["AuthServer:Authority"]);
+            if (disco.IsError)
             {
-                Authority = _configuration["AuthServer:Authority"],
+                Console.WriteLine(disco.Error);
+                return Json(new { code = 0, data = disco.Error });
+            }
+            // request token
+            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = disco.TokenEndpoint,
                 ClientId = _configuration["AuthServer:ClientId"],
                 ClientSecret = _configuration["AuthServer:ClientSecret"],
                 GrantType = OidcConstants.GrantTypes.Password,
                 UserName = login.UserNameOrEmailAddress,
-                UserPassword = login.Password,
-                Scope = "offline_access Base"
-            };
-
-            string token = await _authenticator.GetAccessTokenAsync(config);
-
-            return Json(new { code = 10000, data = token });
+                Password = login.Password,
+                Scope = "Base"
+            });
+            if (tokenResponse.IsError)
+            {
+                Console.WriteLine(tokenResponse.Error);
+                return Json(new
+                {
+                    code = 0,
+                    data = tokenResponse.ErrorDescription,
+                    message = tokenResponse.Error
+                });
+            }
+            return Json(new { code = 1, data = tokenResponse.Json });
         }
+
+
         [HttpPost]
         public async Task<IActionResult> Info()
         {
