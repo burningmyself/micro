@@ -28,6 +28,8 @@ layui 后台layui
 
 [layui](http://abp.layui.burningmyself.cn/views/user/login.html): http://abp.layui.burningmyself.cn/views/user/login.html
 
+![example](./vue/src/assets/example.png)
+
 ## 贡献
 
     欢迎大神添砖

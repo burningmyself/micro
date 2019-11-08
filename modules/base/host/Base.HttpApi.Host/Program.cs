@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -10,7 +11,7 @@ namespace Base
     public class Program
     {
         public static int Main(string[] args)
-        {
+        {           
             Log.Logger = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
@@ -43,6 +44,7 @@ namespace Base
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    //webBuilder.UseUrls("http://172.17.0.13:2002/", "http://localhost:2002/");
                     webBuilder.UseStartup<Startup>();
                 })
                 .UseAutofac()

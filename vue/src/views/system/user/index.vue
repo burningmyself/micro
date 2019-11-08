@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.filter"
-        :placeholder="$t('user.filter')"
+        :placeholder="$t('table.filter')"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -104,14 +104,14 @@
           class-name="fixed-width"
         >
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('User.edit') }}</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('permission.editUser') }}</el-button>
             <el-button
               size="mini"
               type="danger"
               @click="handleDelete(row,'deleted')"
-            >{{ $t('User.delete') }}</el-button>
+            >{{ $t('permission.delete') }}</el-button>
 
-            <el-button size="mini" type="warning" @click="handleRole(row)">{{ $t('User.roles') }}</el-button>
+            <el-button size="mini" type="warning" @click="handleRole(row)">{{ $t('permission.editUserPermission') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -147,8 +147,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="digRole = false">{{ $t('User.cancel') }}</el-button>
-          <el-button type="primary" @click="submitPermission">{{ $t('User.confirm') }}</el-button>
+          <el-button @click="digRole = false">{{ $t('permission.cancel') }}</el-button>
+          <el-button type="primary" @click="submitPermission">{{ $t('permission.confirm') }}</el-button>
         </div>
       </el-dialog>
 
@@ -187,11 +187,11 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('User.cancel') }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('permission.cancel') }}</el-button>
           <el-button
             type="primary"
             @click="dialogStatus==='create'?createData():updateData()"
-          >{{ $t('User.confirm') }}</el-button>
+          >{{ $t('permission.confirm') }}</el-button>
         </div>
       </el-dialog>
 
@@ -201,7 +201,7 @@
           <el-table-column prop="pageviews" label="Pageviews" />
         </el-table>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('User.confirm') }}</el-button>
+          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('permission.confirm') }}</el-button>
         </span>
       </el-dialog>
     </div>

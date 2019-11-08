@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.filter"
-        :placeholder="$t('Tenant.filter')"
+        :placeholder="$t('table.filter')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -54,12 +54,12 @@
           class-name="fixed-width"
         >
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('Tenant.edit') }}</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('permission.editTenant') }}</el-button>
             <el-button
               size="mini"
               type="danger"
               @click="handleDelete(row,'deleted')"
-            >{{ $t('Tenant.delete') }}</el-button>
+            >{{ $t('permission.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,11 +84,11 @@
           </el-form-item>         
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('Tenant.cancel') }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('permission.cancel') }}</el-button>
           <el-button
             type="primary"
             @click="dialogStatus==='create'?createData():updateData()"
-          >{{ $t('Tenant.confirm') }}</el-button>
+          >{{ $t('permission.confirm') }}</el-button>
         </div>
       </el-dialog>
 
@@ -98,7 +98,7 @@
           <el-table-column prop="pageviews" label="Pageviews" />
         </el-table>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('Tenant.confirm') }}</el-button>
+          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('permission.confirm') }}</el-button>
         </span>
       </el-dialog>
     </div>

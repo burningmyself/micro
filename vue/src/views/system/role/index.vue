@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.filter"
-        :placeholder="$t('role.filter')"
+        :placeholder="$t('table.search')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -69,18 +69,18 @@
           class-name="fixed-width"
         >
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('role.edit') }}</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('permission.editRole') }}</el-button>
             <el-button
               size="mini"
               type="danger"
               @click="handleDelete(row,'deleted')"
-            >{{ $t('role.delete') }}</el-button>
+            >{{ $t('permission.delete') }}</el-button>
 
             <el-button
               size="mini"
               type="warning"
               @click="handlePermission(row,'permission')"
-            >{{ $t('role.permission') }}</el-button>
+            >{{ $t('permission.editRolePermission') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -118,11 +118,11 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('role.cancel') }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('permission.cancel') }}</el-button>
           <el-button
             type="primary"
             @click="dialogStatus=='create'?createData():updateData()"
-          >{{ $t('role.confirm') }}</el-button>
+          >{{ $t('permission.confirm') }}</el-button>
         </div>
       </el-dialog>
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormPermission">
@@ -134,7 +134,7 @@
           label-width="100px"
           style="width: 400px;height:800px !important;margin-left:50px;"
         >
-          <el-form-item :label="$t('role.name')" prop="name">
+          <el-form-item :label="$t('permission.roles')" prop="name">
             <el-input v-model="tempRoleData.name" />
           </el-form-item>
           <el-form-item>
@@ -142,8 +142,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormPermission = false">{{ $t('role.cancel') }}</el-button>
-          <el-button type="primary" @click="Sub">{{ $t('role.confirm') }}</el-button>
+          <el-button @click="dialogFormPermission = false">{{ $t('permission.cancel') }}</el-button>
+          <el-button type="primary" @click="Sub">{{ $t('permission.confirm') }}</el-button>
         </div>
       </el-dialog>
       <el-dialog :visible.sync="dialogPageviewsVisible" title="Reading statistics">
@@ -152,7 +152,7 @@
           <el-table-column prop="pageviews" label="Pageviews" />
         </el-table>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('role.confirm') }}</el-button>
+          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('permission.confirm') }}</el-button>
         </span>
       </el-dialog>
     </div>
