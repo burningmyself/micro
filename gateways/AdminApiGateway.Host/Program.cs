@@ -23,7 +23,7 @@ namespace AdminApiGateway.Host
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.WithProperty("Application", "PublicWebSite")
+                .Enrich.WithProperty("Application", "AdminApiGateway")
                 .Enrich.FromLogContext()
                 .WriteTo.File("Logs/logs.txt")
                 .WriteTo.Elasticsearch(

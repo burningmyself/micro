@@ -12,6 +12,7 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System;
 using System.Linq;
+using Volo.Abp.EntityFrameworkCore;
 
 namespace AdminApiGateway.Host
 {
@@ -33,15 +34,15 @@ namespace AdminApiGateway.Host
                      options.Authority = configuration["AuthServer:Authority"];
                      options.ApiName = configuration["AuthServer:ApiName"];
                      options.RequireHttpsMetadata = false;
-                    //TODO: Should create an extension method for that (may require to create a new ABP package depending on the IdentityServer4.AccessTokenValidation)
-                    //options.InboundJwtClaimTypeMap["sub"] = AbpClaimTypes.UserId;
-                    //options.InboundJwtClaimTypeMap["role"] = AbpClaimTypes.Role;
-                    //options.InboundJwtClaimTypeMap["email"] = AbpClaimTypes.Email;
-                    //options.InboundJwtClaimTypeMap["email_verified"] = AbpClaimTypes.EmailVerified;
-                    //options.InboundJwtClaimTypeMap["phone_number"] = AbpClaimTypes.PhoneNumber;
-                    //options.InboundJwtClaimTypeMap["phone_number_verified"] = AbpClaimTypes.PhoneNumberVerified;
-                    //options.InboundJwtClaimTypeMap["name"] = AbpClaimTypes.UserName;
-                });
+                     //TODO: Should create an extension method for that (may require to create a new ABP package depending on the IdentityServer4.AccessTokenValidation)
+                     //options.InboundJwtClaimTypeMap["sub"] = AbpClaimTypes.UserId;
+                     //options.InboundJwtClaimTypeMap["role"] = AbpClaimTypes.Role;
+                     //options.InboundJwtClaimTypeMap["email"] = AbpClaimTypes.Email;
+                     //options.InboundJwtClaimTypeMap["email_verified"] = AbpClaimTypes.EmailVerified;
+                     //options.InboundJwtClaimTypeMap["phone_number"] = AbpClaimTypes.PhoneNumber;
+                     //options.InboundJwtClaimTypeMap["phone_number_verified"] = AbpClaimTypes.PhoneNumberVerified;
+                     //options.InboundJwtClaimTypeMap["name"] = AbpClaimTypes.UserName;
+                 });
 
             context.Services.AddSwaggerGen(options =>
             {
@@ -51,10 +52,10 @@ namespace AdminApiGateway.Host
             });
             context.Services.AddOcelot(context.Services.GetConfiguration());
 
-            //Configure<AbpDbContextOptions>(options =>
-            //{
-            //    options.UseSqlServer();
-            //});
+            Configure<AbpDbContextOptions>(options =>
+            {
+                options.UseSqlServer();
+            });
 
             Configure<AbpLocalizationOptions>(options =>
             {
@@ -66,7 +67,7 @@ namespace AdminApiGateway.Host
             context.Services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = configuration["Redis:Configuration"];
-            });           
+            });
 
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
             context.Services.AddDataProtection()
@@ -98,11 +99,15 @@ namespace AdminApiGateway.Host
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "AdminApiGateway Gateway API");
             });
 
-            //app.MapWhen(
-            //    ctx => ctx.Request.Path.ToString().StartsWith("/api/abp/") ||
-            //           ctx.Request.Path.ToString().StartsWith("/Abp/"),
-            //    app2 => { app2.UseMvcWithDefaultRouteAndArea(); }
-            //);
+            app.MapWhen(
+               ctx => ctx.Request.Path.ToString().StartsWith("/api/abp/") ||
+                      ctx.Request.Path.ToString().StartsWith("/Abp/"),
+               app2 =>
+               {
+                   app2.UseRouting();
+                   app2.UseMvcWithDefaultRouteAndArea();
+               }
+           );
 
             app.UseOcelot().Wait();
 
