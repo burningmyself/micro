@@ -113,7 +113,7 @@
       //提交
       form.on('submit(LAY-user-login-submit)', function (obj) {
         layui.login(obj.field).success(res => {
-          if (res.code == 10000) {
+          if (res.code == 1) {
             localStorage.setItem('token', res.data.access_token)
             //登入成功的提示与跳转
             layer.msg('登入成功', {

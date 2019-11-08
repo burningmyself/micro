@@ -3,7 +3,7 @@ layui.define([], function (e) {
 
 
     e('api', {
-        identity: 'http://localhost:2001/api/',
+        identity: 'http://localhost:2000/api/',
         base: ''
     })
 });
