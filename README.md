@@ -37,7 +37,8 @@ layui 后台layui
     感觉可以，给星就是最大得支持
 
 ## java  spring boot 2.2.2 admin
-[spring-boot-admin](http://ysf.burningmyself.cn:8080): http://ysf.burningmyself.cn:8080
+[spring-boot-admin](https://github.com/burningmyself/ysf): http://ysf.burningmyself.cn:8080
+admin  111111
   
 
 
