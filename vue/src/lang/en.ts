@@ -5,8 +5,8 @@ export default {
     guide: 'Guide',
     system: 'System pemistion',
     users: 'User',
-    roles: 'Role', 
-    tenants: 'Tenant',  
+    roles: 'Role',
+    tenants: 'Tenant',
     profile: 'Profile'
   },
   navbar: {

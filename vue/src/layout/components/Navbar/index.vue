@@ -6,20 +6,33 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+    />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <header-search class="right-menu-item" />
         <error-log class="errLog-container right-menu-item hover-effect" />
         <screenfull class="right-menu-item hover-effect" />
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+        <el-tooltip
+          :content="$t('navbar.size')"
+          effect="dark"
+          placement="bottom"
+        >
           <size-select class="right-menu-item hover-effect" />
         </el-tooltip>
         <lang-select class="right-menu-item hover-effect" />
       </template>
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img
+            :src="avatar+'?imageView2/1/w/80/h/80'"
+            class="user-avatar"
+          >
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -44,7 +57,10 @@
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>-->
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            <span
+              style="display:block;"
+              @click="logout"
+            >{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -53,19 +69,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { AppModule } from "@/store/modules/app";
-import { UserModule } from "@/store/modules/user";
-import Breadcrumb from "@/components/Breadcrumb/index.vue";
-import ErrorLog from "@/components/ErrorLog/index.vue";
-import Hamburger from "@/components/Hamburger/index.vue";
-import HeaderSearch from "@/components/HeaderSearch/index.vue";
-import LangSelect from "@/components/LangSelect/index.vue";
-import Screenfull from "@/components/Screenfull/index.vue";
-import SizeSelect from "@/components/SizeSelect/index.vue";
+import { Component, Vue } from 'vue-property-decorator'
+import { AppModule } from '@/store/modules/app'
+import { UserModule } from '@/store/modules/user'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import ErrorLog from '@/components/ErrorLog/index.vue'
+import Hamburger from '@/components/Hamburger/index.vue'
+import HeaderSearch from '@/components/HeaderSearch/index.vue'
+import LangSelect from '@/components/LangSelect/index.vue'
+import Screenfull from '@/components/Screenfull/index.vue'
+import SizeSelect from '@/components/SizeSelect/index.vue'
 
 @Component({
-  name: "Navbar",
+  name: 'Navbar',
   components: {
     Breadcrumb,
     ErrorLog,
@@ -78,24 +94,24 @@ import SizeSelect from "@/components/SizeSelect/index.vue";
 })
 export default class extends Vue {
   get sidebar() {
-    return AppModule.sidebar;
+    return AppModule.sidebar
   }
 
   get device() {
-    return AppModule.device.toString();
+    return AppModule.device.toString()
   }
 
   get avatar() {
-    return UserModule.avatar;
+    return UserModule.avatar
   }
 
   private toggleSideBar() {
-    AppModule.ToggleSideBar(false);
+    AppModule.ToggleSideBar(false)
   }
 
   private async logout() {
-    await UserModule.LogOut();
-    this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    await UserModule.LogOut()
+    this.$router.push(`/login?redirect=${this.$route.fullPath}`)
   }
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
   <div :class="{'has-logo': showLogo}">
-    <sidebar-logo v-if="showLogo" :collapse="isCollapse" />
+    <sidebar-logo
+      v-if="showLogo"
+      :collapse="isCollapse"
+    />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -25,14 +28,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Model } from "vue-property-decorator";
-import { AppModule } from "@/store/modules/app";
-import { PermissionModule } from "@/store/modules/permission";
-import { SettingsModule } from "@/store/modules/settings";
-import SidebarItem from "./SidebarItem.vue";
-import SidebarLogo from "./SidebarLogo.vue";
-import variables from "@/styles/_variables.scss";
-import { UserModule } from "../../../store/modules/user";
+import { Component, Prop, Vue, Model } from 'vue-property-decorator'
+import { AppModule } from '@/store/modules/app'
+import { PermissionModule } from '@/store/modules/permission'
+import { SettingsModule } from '@/store/modules/settings'
+import SidebarItem from './SidebarItem.vue'
+import SidebarLogo from './SidebarLogo.vue'
+import variables from '@/styles/_variables.scss'
+import { UserModule } from '../../../store/modules/user'
 
 interface Root {
   children: Array<Root>;
@@ -41,7 +44,7 @@ interface Root {
 }
 
 @Component({
-  name: "SideBar",
+  name: 'SideBar',
   components: {
     SidebarItem,
     SidebarLogo
@@ -49,67 +52,67 @@ interface Root {
 })
 export default class extends Vue {
   constructor() {
-    super();
-    let grantRoutes: Array<string> = this.assset();
-    let routes = this.routes;
-    this.routes = this.fooMenu(grantRoutes, routes);
+    super()
+    let grantRoutes: Array<string> = this.assset()
+    let routes = this.routes
+    this.routes = this.fooMenu(grantRoutes, routes)
   }
 
   assset() {
-    let grantRoutes: Array<string> = [];
-    for (let filed in UserModule.auth.grantedPolicies) grantRoutes.push(filed);
-    return grantRoutes;
+    let grantRoutes: Array<string> = []
+    for (let filed in UserModule.auth.grantedPolicies) grantRoutes.push(filed)
+    return grantRoutes
   }
 
   fooMenu(grantRoutes: Array<string>, routes: Array<Root>) {
-    let arr: Array<Root> = [];
+    let arr: Array<Root> = []
     for (let i = 0; i < routes.length; i++) {
-      let item = routes[i];
+      let item = routes[i]
       if (!(grantRoutes.find(g => g == item.name) == undefined)) {
         if (item.children != undefined) {
-          item.children = this.fooMenu(grantRoutes, item.children);
+          item.children = this.fooMenu(grantRoutes, item.children)
         }
-        arr.push(item);
+        arr.push(item)
       }
     }
-    return arr;
+    return arr
   }
 
   get sidebar() {
-    return AppModule.sidebar;
+    return AppModule.sidebar
   }
 
   @Model()
   routes: any = PermissionModule.routes;
 
   get showLogo() {
-    return SettingsModule.showSidebarLogo;
+    return SettingsModule.showSidebarLogo
   }
 
   get menuActiveTextColor() {
     if (SettingsModule.sidebarTextTheme) {
-      return SettingsModule.theme;
+      return SettingsModule.theme
     } else {
-      return variables.menuActiveText;
+      return variables.menuActiveText
     }
   }
 
   get variables() {
-    return variables;
+    return variables
   }
 
   get activeMenu() {
-    const route = this.$route;
-    const { meta, path } = route;
+    const route = this.$route
+    const { meta, path } = route
     // if set path, the sidebar will highlight the path you set
     if (meta.activeMenu) {
-      return meta.activeMenu;
+      return meta.activeMenu
     }
-    return path;
+    return path
   }
 
   get isCollapse() {
-    return !this.sidebar.opened;
+    return !this.sidebar.opened
   }
 }
 </script>

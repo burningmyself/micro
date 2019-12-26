@@ -14,14 +14,18 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('table.search') }}</el-button>
+      >
+        {{ $t('table.search') }}
+      </el-button>
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t('table.add') }}</el-button>
+      >
+        {{ $t('table.add') }}
+      </el-button>
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -42,22 +46,37 @@
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('role.name')" min-width="150px">
+        <el-table-column
+          :label="$t('role.name')"
+          min-width="150px"
+        >
           <template slot-scope="{row}">
             <span @click="handleUpdate(row)">{{ row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('role.isDefault')" width="180px" align="center">
+        <el-table-column
+          :label="$t('role.isDefault')"
+          width="180px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.isDefault }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('role.isStatic')" width="180px" align="center">
+        <el-table-column
+          :label="$t('role.isStatic')"
+          width="180px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.isStatic }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('role.isPublic')" width="180px" align="center">
+        <el-table-column
+          :label="$t('role.isPublic')"
+          width="180px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.isPublic }}</span>
           </template>
@@ -69,18 +88,28 @@
           class-name="fixed-width"
         >
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('permission.editRole') }}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleUpdate(row)"
+            >
+              {{ $t('permission.editRole') }}
+            </el-button>
             <el-button
               size="mini"
               type="danger"
               @click="handleDelete(row,'deleted')"
-            >{{ $t('permission.delete') }}</el-button>
+            >
+              {{ $t('permission.delete') }}
+            </el-button>
 
             <el-button
               size="mini"
               type="warning"
               @click="handlePermission(row,'permission')"
-            >{{ $t('permission.editRolePermission') }}</el-button>
+            >
+              {{ $t('permission.editRolePermission') }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +120,10 @@
         :limit.sync="listQuery.limit"
         @pagination="getList"
       />
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-dialog
+        :title="textMap[dialogStatus]"
+        :visible.sync="dialogFormVisible"
+      >
         <el-form
           ref="dataForm"
           :rules="rules"
@@ -100,32 +132,90 @@
           label-width="100px"
           style="width: 400px; margin-left:50px;"
         >
-          <el-form-item :label="$t('role.name')" prop="name">
+          <el-form-item
+            :label="$t('role.name')"
+            prop="name"
+          >
             <el-input v-model="tempRoleData.name" />
           </el-form-item>
-          {{tempRoleData.isStatic}}
-          <el-form-item :label="$t('role.isStatic')" prop="isStatic">
-            <el-radio v-model="tempRoleData.isStatic" label="true" border>{{$t('true')}}</el-radio>
-            <el-radio v-model="tempRoleData.isStatic" label="false" border>{{$t('false')}}</el-radio>
+          {{ tempRoleData.isStatic }}
+          <el-form-item
+            :label="$t('role.isStatic')"
+            prop="isStatic"
+          >
+            <el-radio
+              v-model="tempRoleData.isStatic"
+              label="true"
+              border
+            >
+              {{ $t('true') }}
+            </el-radio>
+            <el-radio
+              v-model="tempRoleData.isStatic"
+              label="false"
+              border
+            >
+              {{ $t('false') }}
+            </el-radio>
           </el-form-item>
-          <el-form-item :label="$t('role.isPublic')" prop="isPublic">
-            <el-radio v-model="tempRoleData.isPublic" label="true" border>{{$t('true')}}</el-radio>
-            <el-radio v-model="tempRoleData.isPublic" label="false" border>{{$t('false')}}</el-radio>
+          <el-form-item
+            :label="$t('role.isPublic')"
+            prop="isPublic"
+          >
+            <el-radio
+              v-model="tempRoleData.isPublic"
+              label="true"
+              border
+            >
+              {{ $t('true') }}
+            </el-radio>
+            <el-radio
+              v-model="tempRoleData.isPublic"
+              label="false"
+              border
+            >
+              {{ $t('false') }}
+            </el-radio>
           </el-form-item>
-          <el-form-item :label="$t('role.isDefault')" prop="isDefault">
-            <el-radio v-model="tempRoleData.isDefault" label="true" border>{{$t('true')}}</el-radio>
-            <el-radio v-model="tempRoleData.isDefault" label="false" border>{{$t('false')}}</el-radio>
+          <el-form-item
+            :label="$t('role.isDefault')"
+            prop="isDefault"
+          >
+            <el-radio
+              v-model="tempRoleData.isDefault"
+              label="true"
+              border
+            >
+              {{ $t('true') }}
+            </el-radio>
+            <el-radio
+              v-model="tempRoleData.isDefault"
+              label="false"
+              border
+            >
+              {{ $t('false') }}
+            </el-radio>
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{ $t('permission.cancel') }}</el-button>
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="dialogFormVisible = false">
+            {{ $t('permission.cancel') }}
+          </el-button>
           <el-button
             type="primary"
             @click="dialogStatus=='create'?createData():updateData()"
-          >{{ $t('permission.confirm') }}</el-button>
+          >
+            {{ $t('permission.confirm') }}
+          </el-button>
         </div>
       </el-dialog>
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormPermission">
+      <el-dialog
+        :title="textMap[dialogStatus]"
+        :visible.sync="dialogFormPermission"
+      >
         <el-form
           ref="PermissionForm"
           :rules="rules"
@@ -134,47 +224,87 @@
           label-width="100px"
           style="width: 400px;height:800px !important;margin-left:50px;"
         >
-          <el-form-item :label="$t('permission.roles')" prop="name">
+          <el-form-item
+            :label="$t('permission.roles')"
+            prop="name"
+          >
             <el-input v-model="tempRoleData.name" />
           </el-form-item>
           <el-form-item>
-            <el-checkbox v-for="item in permission.array" v-model="item.v" :key="item.t">{{item.t}}</el-checkbox>
+            <el-checkbox
+              v-for="item in permission.array"
+              :key="item.t"
+              v-model="item.v"
+            >
+              {{ item.t }}
+            </el-checkbox>
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormPermission = false">{{ $t('permission.cancel') }}</el-button>
-          <el-button type="primary" @click="Sub">{{ $t('permission.confirm') }}</el-button>
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="dialogFormPermission = false">
+            {{ $t('permission.cancel') }}
+          </el-button>
+          <el-button
+            type="primary"
+            @click="Sub"
+          >
+            {{ $t('permission.confirm') }}
+          </el-button>
         </div>
       </el-dialog>
-      <el-dialog :visible.sync="dialogPageviewsVisible" title="Reading statistics">
-        <el-table :data="pageviewsData" border fit highlight-current-row style="width: 100%">
-          <el-table-column prop="key" label="Channel" />
-          <el-table-column prop="pageviews" label="Pageviews" />
+      <el-dialog
+        :visible.sync="dialogPageviewsVisible"
+        title="Reading statistics"
+      >
+        <el-table
+          :data="pageviewsData"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="key"
+            label="Channel"
+          />
+          <el-table-column
+            prop="pageviews"
+            label="Pageviews"
+          />
         </el-table>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogPageviewsVisible = false">{{ $t('permission.confirm') }}</el-button>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click="dialogPageviewsVisible = false"
+          >{{ $t('permission.confirm') }}</el-button>
         </span>
       </el-dialog>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Model } from "vue-property-decorator";
-import { Form } from "element-ui";
-import { cloneDeep } from "lodash";
-import { exportJson2Excel } from "@/utils/excel";
-import { formatJson } from "@/utils";
-import Pagination from "@/components/Pagination/index.vue";
+import { Component, Vue, Model } from 'vue-property-decorator'
+import { Form } from 'element-ui'
+import { cloneDeep } from 'lodash'
+import { exportJson2Excel } from '@/utils/excel'
+import { formatJson } from '@/utils'
+import Pagination from '@/components/Pagination/index.vue'
 import {
   getRoles,
   updateRole,
   createRole,
   deleteRole,
   editRolePermission
-} from "@/api/roles";
+} from '@/api/roles'
 
-import { UserModule } from "@/store/modules/user";
-import { RoleModule } from "@/store/modules/role";
+import { UserModule } from '@/store/modules/user'
+import { RoleModule } from '@/store/modules/role'
 interface IRoleData {
   id: string;
   name: string;
@@ -183,39 +313,39 @@ interface IRoleData {
   isDefault: boolean;
 }
 const defaultRoleData: IRoleData = {
-  id: "",
-  name: "",
+  id: '',
+  name: '',
   isStatic: true,
   isPublic: true,
   isDefault: true
-};
+}
 
 @Component({
-  name: "roleTable",
+  name: 'roleTable',
   components: {
     Pagination
   }
 })
 export default class extends Vue {
   constructor() {
-    super();
+    super()
 
-    let t = UserModule.auth.policies;
+    let t = UserModule.auth.policies
     for (let item in t) {
-      this.permission.array.push({ t: item, v: false });
+      this.permission.array.push({ t: item, v: false })
     }
   }
 
   Sub() {
-    let t = this.permission.array;
-    let filterData = t.filter(x => x.v);
-    let subData = filterData.map(x => x.t);
+    let t = this.permission.array
+    let filterData = t.filter(x => x.v)
+    let subData = filterData.map(x => x.t)
     editRolePermission({ id: this.roleid, grantPermission: subData }).then(
       res => {
-        this.dialogFormPermission = false;
-        this.handleFilter();
+        this.dialogFormPermission = false
+        this.handleFilter()
       }
-    );
+    )
   }
 
   private roleid!: string;
@@ -231,15 +361,15 @@ export default class extends Vue {
     importance: undefined,
     title: undefined,
     type: undefined,
-    sort: "+id"
+    sort: '+id'
   };
   private dialogFormVisible = false;
   private dialogFormPermission = false;
-  private dialogStatus = "";
+  private dialogStatus = '';
   private textMap = {
-    update: "Edit",
-    create: "Create",
-    permission: "Permission"
+    update: 'Edit',
+    create: 'Create',
+    permission: 'Permission'
   };
 
   private permission = {
@@ -250,118 +380,118 @@ export default class extends Vue {
   private dialogPageviewsVisible = false;
   private pageviewsData = [];
   private rules = {
-    name: [{ required: true, message: "name is required", trigger: "change" }]
+    name: [{ required: true, message: 'name is required', trigger: 'change' }]
   };
 
   private handleFilter() {
-    this.listQuery.page = 1;
-    this.getList();
+    this.listQuery.page = 1
+    this.getList()
   }
   private resetTempRoleData() {
-    this.tempRoleData = cloneDeep(defaultRoleData);
+    this.tempRoleData = cloneDeep(defaultRoleData)
   }
   private handleCreate() {
-    this.resetTempRoleData();
-    this.dialogStatus = "create";
-    this.dialogFormVisible = true;
+    this.resetTempRoleData()
+    this.dialogStatus = 'create'
+    this.dialogFormVisible = true
     this.$nextTick(() => {
-      (this.$refs["dataForm"] as Form).clearValidate();
-    });
+      (this.$refs['dataForm'] as Form).clearValidate()
+    })
   }
   private createData() {
-    (this.$refs["dataForm"] as Form).validate(async valid => {
+    (this.$refs['dataForm'] as Form).validate(async valid => {
       if (valid) {
-        let { id, isStatic, ...roleData } = this.tempRoleData;
-        const data = await createRole(roleData);
-        this.list.unshift(data);
-        this.dialogFormVisible = false;
+        let { id, isStatic, ...roleData } = this.tempRoleData
+        const data = await createRole(roleData)
+        this.list.unshift(data)
+        this.dialogFormVisible = false
         this.$notify({
-          title: "成功",
-          message: "创建成功",
-          type: "success",
+          title: '成功',
+          message: '创建成功',
+          type: 'success',
           duration: 2000
-        });
+        })
       }
-    });
+    })
   }
   private handleUpdate(row: any) {
-    this.tempRoleData = Object.assign({}, row);
-    this.dialogStatus = "update";
-    this.dialogFormVisible = true;
+    this.tempRoleData = Object.assign({}, row)
+    this.dialogStatus = 'update'
+    this.dialogFormVisible = true
     this.$nextTick(() => {
-      (this.$refs["dataForm"] as Form).clearValidate();
-    });
+      (this.$refs['dataForm'] as Form).clearValidate()
+    })
   }
   private handlePermission(row: any) {
-    let g = row.grantPermission;
-    let per = this.permission;
+    let g = row.grantPermission
+    let per = this.permission
     for (let i in g) {
       for (let j in per.array) {
         if (g[i] == per.array[j].t) {
-          per.array[j].v = true;
+          per.array[j].v = true
         }
       }
     }
-    this.permission;
-    this.tempRoleData = Object.assign({}, row);
-    this.dialogStatus = "permission";
-    this.roleid = row.id;
-    this.dialogFormPermission = true;
+    this.permission
+    this.tempRoleData = Object.assign({}, row)
+    this.dialogStatus = 'permission'
+    this.roleid = row.id
+    this.dialogFormPermission = true
     this.$nextTick(() => {
-      (this.$refs["PermissionForm"] as Form).clearValidate();
-    });
+      (this.$refs['PermissionForm'] as Form).clearValidate()
+    })
   }
   private updateData() {
-    (this.$refs["dataForm"] as Form).validate(async valid => {
+    (this.$refs['dataForm'] as Form).validate(async valid => {
       if (valid) {
-        const tempData = Object.assign({}, this.tempRoleData);
-        const data = await updateRole(tempData.id, tempData);
+        const tempData = Object.assign({}, this.tempRoleData)
+        const data = await updateRole(tempData.id, tempData)
         for (const v of this.list) {
           if (v.id === data.id) {
-            const index = this.list.indexOf(v);
-            this.list.splice(index, 1, data);
-            break;
+            const index = this.list.indexOf(v)
+            this.list.splice(index, 1, data)
+            break
           }
         }
-        this.dialogFormVisible = false;
+        this.dialogFormVisible = false
         this.$notify({
-          title: "成功",
-          message: "更新成功",
-          type: "success",
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
           duration: 2000
-        });
+        })
       }
-    });
+    })
   }
   private handleModifyStatus() {}
 
   private handleGetPageviews() {}
 
   private handleDelete(row: any) {
-    const data = deleteRole(row.id);
+    const data = deleteRole(row.id)
     if (data) {
-      this.list = this.list.filter(r => r !== row);
+      this.list = this.list.filter(r => r !== row)
       this.$notify({
-        title: "成功",
-        message: "删除成功",
-        type: "success",
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
         duration: 2000
-      });
+      })
     }
   }
   private tempRoleData = defaultRoleData;
   created() {
-    this.getList();
+    this.getList()
   }
   private async getList() {
-    this.listLoading = true;
-    const data = await getRoles(this.listQuery);
-    this.list = data.items;
-    this.total = this.list.length;
+    this.listLoading = true
+    const data = await getRoles(this.listQuery)
+    this.list = data.items
+    this.total = this.list.length
     // Just to simulate the time of the request
     setTimeout(() => {
-      this.listLoading = false;
-    }, 0.5 * 1000);
+      this.listLoading = false
+    }, 0.5 * 1000)
   }
 }
 </script>

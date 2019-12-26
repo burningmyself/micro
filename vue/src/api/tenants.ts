@@ -24,6 +24,5 @@ export const createTenant = (data: any) =>
 export const deleteTenant = (id: any) =>
   request({
     url: `/multi-tenancy/tenants/${id}`,
-    method: 'delete'    
+    method: 'delete'
   })
-

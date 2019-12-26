@@ -9,19 +9,18 @@ interface ISettings {
     devServerPort: number // Port number for webpack-dev-server
     mockServerPort: number // Port number for mock server
   }
-  
-  // You can customize below settings :)
-  const settings: ISettings = {
-    title: 'Abp Vue Admin',
-    showSettings: true,
-    showTagsView: true,
-    fixedHeader: false,
-    showSidebarLogo: false,
-    errorLog: ['production'],
-    sidebarTextTheme: true,
-    devServerPort: 9527,
-    mockServerPort: 9528
-  }
-  
-  export default settings
-  
+
+// You can customize below settings :)
+const settings: ISettings = {
+  title: 'Abp Vue Admin',
+  showSettings: true,
+  showTagsView: true,
+  fixedHeader: false,
+  showSidebarLogo: false,
+  errorLog: ['production'],
+  sidebarTextTheme: true,
+  devServerPort: 9527,
+  mockServerPort: 9528
+}
+
+export default settings

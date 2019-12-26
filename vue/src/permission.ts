@@ -21,7 +21,7 @@ const getPageTitle = (key: string) => {
   return `${settings.title}`
 }
 
-router.beforeEach(async (to: Route, _: Route, next: any) => {
+router.beforeEach(async(to: Route, _: Route, next: any) => {
   // Start progress bar
   NProgress.start()
   // Determine whether the user has logged in

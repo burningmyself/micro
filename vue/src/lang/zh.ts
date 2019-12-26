@@ -5,8 +5,8 @@ export default {
     guide: '引导页',
     system: '系统权限',
     users: '用户',
-    roles: '角色', 
-    tenants: '租户',  
+    roles: '角色',
+    tenants: '租户',
     profile: '个人中心'
   },
   navbar: {
@@ -123,5 +123,5 @@ export default {
     showSidebarLogo: '显示侧边栏 Logo',
     fixedHeader: '固定 Header',
     sidebarTextTheme: '侧边栏文字主题色'
-  },
+  }
 }

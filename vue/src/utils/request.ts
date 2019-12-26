@@ -52,7 +52,7 @@ service.interceptors.response.use(
           UserModule.ResetToken()
           location.reload() // To prevent bugs from vue-router
         })
-      }      
+      }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return response.data || response

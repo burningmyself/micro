@@ -15,7 +15,7 @@ export const getBaseRoles = () =>
 
   request({
     url: '/identity/roles',
-    method: 'get',
+    method: 'get'
   })
 
 export const createRole = (data: any) =>
@@ -25,11 +25,10 @@ export const createRole = (data: any) =>
     data
   })
 
-
 export const editRolePermission = (data: any) =>
   request({
     url: '/Account/UpdateRoleGrantPermission',
-    method: "POST",
+    method: 'POST',
     data
   })
 

@@ -5,7 +5,7 @@ export const getUsers = (params: any) =>
   request({
     url: '/identity/users',
     method: 'get',
-    params,
+    params
   })
 
 export const getUserInfo = (data: any) =>
@@ -60,14 +60,11 @@ export const createUser = (data: any) =>
     data
   })
 
-
-
 export const getUserGrantPermission = (data: string) =>
   request({
     url: '/Account/getUserGrantPermission/permission/' + data,
-    method: 'get',
+    method: 'get'
   })
-
 
 export const getPermissionByUserId = (data: string) =>
   request({
@@ -75,14 +72,12 @@ export const getPermissionByUserId = (data: string) =>
     method: 'get'
   })
 
-
 export const updateUserIsRoleAndPermission = (data: UserAndRoleRoot) =>
   request({
     url: `Account/updateUserIsRoleAndPermission/userPermission`,
     method: 'post',
     data
   })
-
 
 export interface UserAndRoleRoot {
   grantPermission: Array<string>
