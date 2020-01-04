@@ -5,7 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY . .
-WORKDIR /src/templates/service/host/Base.IdentityServer
+WORKDIR /micro/modules/base/host/Base.IdentityServer
 RUN dotnet restore -nowarn:msb3202,nu1503
 RUN dotnet build --no-restore -c Release -o /app
 
