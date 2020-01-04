@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS runtime
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /src
 COPY . .
 WORKDIR /micro/modules/base/host/Base.IdentityServer
@@ -12,7 +12,7 @@ RUN dotnet build --no-restore -c Release -o /app
 FROM build AS publish
 RUN dotnet publish --no-restore -c Release -o /app
 
-FROM base AS final
+FROM runtime AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Base.IdentityServer.dll"]
