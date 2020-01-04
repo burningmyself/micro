@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS runtime
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS runtime
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 COPY . .
 WORKDIR /micro/modules/base/host/Base.IdentityServer

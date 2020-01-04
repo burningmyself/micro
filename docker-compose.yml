@@ -1,131 +1,104 @@
 version: '3.0'
 
 services:
+  # 指定服务名称
   sqlserver:
+    # 指定服务使用的镜像
     image: mcr.microsoft.com/mssql/server
+    # 指定容器名称
+    container_name: sqlserver
+    # 指定服务运行的端口
+    ports:
+      - "1433"
+    # 指定容器中需要挂载的文件  
     volumes:
-      - dbdata:/var/opt/mssql
-  
-  mongodb:
-    image: mongo
-  
-  rabbitmq:
-    image: 'rabbitmq:3-management-alpine'
-
+      - /etc/localtime:/etc/localtime
+      - /data/sqlserver:/var/opt/mssql
+    # 挂断自动重新启动  
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - SA_PASSWORD=mssql-MSSQL
+      - ACCEPT_EULA=Y
+    # 指定容器运行的用户为root
+    user:
+      root   
+ # 指定服务名称
   redis:
+    # 指定服务使用的镜像
     image: redis
-
-  elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:6.6.0'
+    # 指定容器名称
+    container_name: redis
+    # 指定服务运行的端口
+    ports:
+      - 6379:6379
+    # 指定容器中需要挂载的文件
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - /etc/localtime:/etc/localtime
+      - /data/redis:/data
+      - /data/redis/redis.conf:/etc/redis.conf
+    # 挂断自动重新启动
+    restart: always
+    # 指定容器执行命令
+    command: redis-server /etc/redis.conf --requirepass xiujingredis. --appendonly yes
+    # 指定容器的环境变量
+    environment:
+      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+  # 指定服务名称
+  mongo:
+    # 指定服务使用的镜像
+    image: mongo
+    # 指定容器名称
+    container_name: mongo
+    # 指定服务运行的端口
+    ports:
+      - 27017:27017
+    # 指定容器中需要挂载的文件
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /data/mongodb/db:/data/db
+      - /data/mongodb/configdb:/data/configdb
+      - /data/mongodb/initdb:/docker-entrypoint-initdb.d      
+    # 挂断自动重新启动
+    restart: always
+    # 指定容器的环境变量
+    environment:
+      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+      - AUTH=yes
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin 
 
-  logstash:
-    image: 'docker.elastic.co/logstash/logstash:6.6.0'
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    image: 'docker.elastic.co/kibana/kibana:6.6.0'
-    depends_on:
-      - elasticsearch
-
-  internal-gateway:
-    image: 'volosoft/microservice-demo-internal-gateway:${TAG:-latest}'
+  AdminApiGateway.Host:
+    image: 'admin-api-gateway:${TAG:-latest}'
     build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/gateways/InternalGateway.Host/Dockerfile
+      context: /data/dotnet
+      dockerfile: micro/gateways/AdminApiGateway.Host/Dockerfile
     depends_on:
-      - elasticsearch
-      - redis
-      - sqlserver
-      - identity-service
-      - product-service
-      - blogging-service
-  
-  backend-admin-app-gateway:
-    image: 'volosoft/microservice-demo-backend-admin-app-gateway:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/gateways/BackendAdminAppGateway.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - redis
-      - sqlserver
-      - identity-service
-      - product-service
-  
-  public-website-gateway:
-    image: 'volosoft/microservice-demo-public-website-gateway:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/gateways/PublicWebSiteGateway.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - redis
-      - blogging-service
-      - product-service
-  
-  blogging-service:
-    image: 'volosoft/microservice-demo-blogging-service:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/microservices/BloggingService.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - mongodb
-      - redis
-  
-  identity-service:
-    image: 'volosoft/microservice-demo-identity-service:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/microservices/IdentityService.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - rabbitmq
-      - redis
-      - sqlserver
-  
-  product-service:
-    image: 'volosoft/microservice-demo-product-service:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/microservices/ProductService.Host/Dockerfile
-    depends_on:
-      - elasticsearch
       - sqlserver
       - redis
-  
-  auth-server:
-    image: 'volosoft/microservice-demo-auth-server:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/applications/AuthServer.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - redis
-      - rabbitmq
-      - identity-service
-  
-  backend-admin-app:
-    image: 'volosoft/microservice-demo-backend-admin-app:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/applications/BackendAdminApp.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - backend-admin-app-gateway
-  
-  public-website:
-    image: 'volosoft/microservice-demo-public-website:${TAG:-latest}'
-    build:
-      context: ../../
-      dockerfile: samples/MicroserviceDemo/applications/PublicWebSite.Host/Dockerfile
-    depends_on:
-      - elasticsearch
-      - public-website-gateway
+      - mongo    
 
-volumes:
-  dbdata:
-  esdata:
+  Base.IdentityServer:
+    image: 'base.identityserver:${TAG:-latest}'
+    build:
+      context: /data/dotnet
+      dockerfile: micro/modules/base/host/Base.IdentityServer/Dockerfile
+    depends_on:
+      - sqlserver
+      - redis
+      - mongo
+      - AdminApiGateway.Host
+
+  Base.HttpApi.Host:
+    image: 'base.httpApi.host:${TAG:-latest}'
+    build:
+      context: /data/dotnet
+      dockerfile: micro/modules/base/host/Base.HttpApi.Host/Dockerfile
+    depends_on:
+      - sqlserver
+      - redis
+      - mongo
+      - AdminApiGateway.Host
+      - Base.IdentityServer
+  
+ 
