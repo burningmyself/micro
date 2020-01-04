@@ -90,7 +90,7 @@ services:
       - AdminApiGateway.Host
 
   Base.HttpApi.Host:
-    image: 'base.httpApi.host:${TAG:-latest}'
+    image: 'base.httpapi.host:${TAG:-latest}'
     build:
       context: /data/dotnet
       dockerfile: micro/modules/base/host/Base.HttpApi.Host/Dockerfile
