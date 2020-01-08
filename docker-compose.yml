@@ -73,6 +73,11 @@ services:
     build:
       context: /data/dotnet
       dockerfile: micro/gateways/AdminApiGateway.Host/Dockerfile
+    # 指定容器名称
+    container_name: gateway  
+    # 指定服务运行的端口
+    ports:
+      - 2000:5000  
     depends_on:
       - sqlserver
       - redis
@@ -83,6 +88,11 @@ services:
     build:
       context: /data/dotnet
       dockerfile: micro/modules/base/host/Base.IdentityServer/Dockerfile
+    # 指定容器名称
+    container_name: identity  
+    # 指定服务运行的端口
+    ports:
+      - 2001:5000    
     depends_on:
       - sqlserver
       - redis
@@ -94,6 +104,11 @@ services:
     build:
       context: /data/dotnet
       dockerfile: micro/modules/base/host/Base.HttpApi.Host/Dockerfile
+    # 指定容器名称
+    container_name: api  
+    # 指定服务运行的端口
+    ports:
+      - 2002:5000    
     depends_on:
       - sqlserver
       - redis
