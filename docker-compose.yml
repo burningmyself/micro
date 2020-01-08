@@ -68,57 +68,65 @@ services:
 #       - MONGO_INITDB_ROOT_USERNAME=admin
 #       - MONGO_INITDB_ROOT_PASSWORD=admin 
 
-  AdminApiGateway.Host:
-    image: 'admin-api-gateway:${TAG:-latest}'
+  Migration:
+    image: 'migration:${TAG:-latest}'
     build:
       context: /data/dotnet
-      dockerfile: micro/gateways/AdminApiGateway.Host/Dockerfile
+      dockerfile: micro/databases/Dockerfile
     # 指定容器名称
-    container_name: gateway  
-    # 指定服务运行的端口
-    ports:
-      - 2000:5000  
-    # 挂断自动重新启动
-    restart: always  
-    # depends_on:
-    #   - sqlserver
-    #   - redis
-    #   - mongo    
+    container_name: migration  
 
-  Base.IdentityServer:
-    image: 'base.identityserver:${TAG:-latest}'
-    build:
-      context: /data/dotnet
-      dockerfile: micro/modules/base/host/Base.IdentityServer/Dockerfile
-    # 指定容器名称
-    container_name: identity  
-    # 指定服务运行的端口
-    ports:
-      - 2001:5000  
-    # 挂断自动重新启动
-    restart: always      
-    # depends_on:
-    #   - sqlserver
-    #   - redis
-    #   - mongo
-    #   - AdminApiGateway.Host
+  # AdminApiGateway.Host:
+  #   image: 'admin-api-gateway:${TAG:-latest}'
+  #   build:
+  #     context: /data/dotnet
+  #     dockerfile: micro/gateways/AdminApiGateway.Host/Dockerfile
+  #   # 指定容器名称
+  #   container_name: gateway  
+  #   # 指定服务运行的端口
+  #   ports:
+  #     - 2000:5000  
+  #   # 挂断自动重新启动
+  #   restart: always  
+  #   # depends_on:
+  #   #   - sqlserver
+  #   #   - redis
+  #   #   - mongo    
 
-  Base.HttpApi.Host:
-    image: 'base.httpapi.host:${TAG:-latest}'
-    build:
-      context: /data/dotnet
-      dockerfile: micro/modules/base/host/Base.HttpApi.Host/Dockerfile
-    # 指定容器名称
-    container_name: api  
-    # 指定服务运行的端口
-    ports:
-      - 2002:5000
-    # 挂断自动重新启动
-    restart: always        
-    # depends_on:
-    #   - sqlserver
-    #   - redis
-    #   - mongo
-    #   - AdminApiGateway.Host
-    #   - Base.IdentityServer 
+  # Base.IdentityServer:
+  #   image: 'base.identityserver:${TAG:-latest}'
+  #   build:
+  #     context: /data/dotnet
+  #     dockerfile: micro/modules/base/host/Base.IdentityServer/Dockerfile
+  #   # 指定容器名称
+  #   container_name: identity  
+  #   # 指定服务运行的端口
+  #   ports:
+  #     - 2001:5000  
+  #   # 挂断自动重新启动
+  #   restart: always      
+  #   # depends_on:
+  #   #   - sqlserver
+  #   #   - redis
+  #   #   - mongo
+  #   #   - AdminApiGateway.Host
+
+  # Base.HttpApi.Host:
+  #   image: 'base.httpapi.host:${TAG:-latest}'
+  #   build:
+  #     context: /data/dotnet
+  #     dockerfile: micro/modules/base/host/Base.HttpApi.Host/Dockerfile
+  #   # 指定容器名称
+  #   container_name: api  
+  #   # 指定服务运行的端口
+  #   ports:
+  #     - 2002:5000
+  #   # 挂断自动重新启动
+  #   restart: always        
+  #   # depends_on:
+  #   #   - sqlserver
+  #   #   - redis
+  #   #   - mongo
+  #   #   - AdminApiGateway.Host
+  #   #   - Base.IdentityServer 
  
