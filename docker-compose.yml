@@ -1,72 +1,72 @@
 version: '3.0'
 
 services:
-  # 指定服务名称
-  sqlserver:
-    # 指定服务使用的镜像
-    image: mcr.microsoft.com/mssql/server
-    # 指定容器名称
-    container_name: sqlserver
-    # 指定服务运行的端口
-    ports:
-      - "1433"
-    # 指定容器中需要挂载的文件  
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /data/sqlserver:/var/opt/mssql
-    # 挂断自动重新启动  
-    restart: always
-    environment:
-      - TZ=Asia/Shanghai
-      - SA_PASSWORD=mssql-MSSQL
-      - ACCEPT_EULA=Y
-    # 指定容器运行的用户为root
-    user:
-      root   
- # 指定服务名称
-  redis:
-    # 指定服务使用的镜像
-    image: redis
-    # 指定容器名称
-    container_name: redis
-    # 指定服务运行的端口
-    ports:
-      - 6379:6379
-    # 指定容器中需要挂载的文件
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /data/redis:/data
-      - /data/redis/redis.conf:/etc/redis.conf
-    # 挂断自动重新启动
-    restart: always
-    # 指定容器执行命令
-    command: redis-server /etc/redis.conf --requirepass xiujingredis. --appendonly yes
-    # 指定容器的环境变量
-    environment:
-      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
-  # 指定服务名称
-  mongo:
-    # 指定服务使用的镜像
-    image: mongo
-    # 指定容器名称
-    container_name: mongo
-    # 指定服务运行的端口
-    ports:
-      - 27017:27017
-    # 指定容器中需要挂载的文件
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /data/mongodb/db:/data/db
-      - /data/mongodb/configdb:/data/configdb
-      - /data/mongodb/initdb:/docker-entrypoint-initdb.d      
-    # 挂断自动重新启动
-    restart: always
-    # 指定容器的环境变量
-    environment:
-      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
-      - AUTH=yes
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin 
+#   # 指定服务名称
+#   sqlserver:
+#     # 指定服务使用的镜像
+#     image: mcr.microsoft.com/mssql/server
+#     # 指定容器名称
+#     container_name: sqlserver
+#     # 指定服务运行的端口
+#     ports:
+#       - "1433"
+#     # 指定容器中需要挂载的文件  
+#     volumes:
+#       - /etc/localtime:/etc/localtime
+#       - /data/sqlserver:/var/opt/mssql
+#     # 挂断自动重新启动  
+#     restart: always
+#     environment:
+#       - TZ=Asia/Shanghai
+#       - SA_PASSWORD=mssql-MSSQL
+#       - ACCEPT_EULA=Y
+#     # 指定容器运行的用户为root
+#     user:
+#       root   
+#  # 指定服务名称
+#   redis:
+#     # 指定服务使用的镜像
+#     image: redis
+#     # 指定容器名称
+#     container_name: redis
+#     # 指定服务运行的端口
+#     ports:
+#       - 6379:6379
+#     # 指定容器中需要挂载的文件
+#     volumes:
+#       - /etc/localtime:/etc/localtime
+#       - /data/redis:/data
+#       - /data/redis/redis.conf:/etc/redis.conf
+#     # 挂断自动重新启动
+#     restart: always
+#     # 指定容器执行命令
+#     command: redis-server /etc/redis.conf --requirepass xiujingredis. --appendonly yes
+#     # 指定容器的环境变量
+#     environment:
+#       - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+#   # 指定服务名称
+#   mongo:
+#     # 指定服务使用的镜像
+#     image: mongo
+#     # 指定容器名称
+#     container_name: mongo
+#     # 指定服务运行的端口
+#     ports:
+#       - 27017:27017
+#     # 指定容器中需要挂载的文件
+#     volumes:
+#       - /etc/localtime:/etc/localtime
+#       - /data/mongodb/db:/data/db
+#       - /data/mongodb/configdb:/data/configdb
+#       - /data/mongodb/initdb:/docker-entrypoint-initdb.d      
+#     # 挂断自动重新启动
+#     restart: always
+#     # 指定容器的环境变量
+#     environment:
+#       - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+#       - AUTH=yes
+#       - MONGO_INITDB_ROOT_USERNAME=admin
+#       - MONGO_INITDB_ROOT_PASSWORD=admin 
 
   AdminApiGateway.Host:
     image: 'admin-api-gateway:${TAG:-latest}'
@@ -78,6 +78,8 @@ services:
     # 指定服务运行的端口
     ports:
       - 2000:5000  
+    # 挂断自动重新启动
+    restart: always  
     depends_on:
       - sqlserver
       - redis
@@ -92,7 +94,9 @@ services:
     container_name: identity  
     # 指定服务运行的端口
     ports:
-      - 2001:5000    
+      - 2001:5000  
+    # 挂断自动重新启动
+    restart: always      
     depends_on:
       - sqlserver
       - redis
@@ -108,12 +112,13 @@ services:
     container_name: api  
     # 指定服务运行的端口
     ports:
-      - 2002:5000    
+      - 2002:5000
+    # 挂断自动重新启动
+    restart: always        
     depends_on:
       - sqlserver
       - redis
       - mongo
       - AdminApiGateway.Host
-      - Base.IdentityServer
-  
+      - Base.IdentityServer 
  
