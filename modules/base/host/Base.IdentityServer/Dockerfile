@@ -15,4 +15,4 @@ RUN dotnet publish --no-restore -c Release -o /app
 FROM runtime AS final
 WORKDIR /app
 COPY --from=publish /app .
-#ENTRYPOINT ["dotnet", "Base.IdentityServer.dll"]
+ENTRYPOINT ["dotnet", "Base.IdentityServer.dll"]
