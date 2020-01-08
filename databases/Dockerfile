@@ -18,4 +18,4 @@ COPY --from=build /src/micro/databases/entrypoint.sh .
 RUN /bin/bash -c "sed -i $'s/\r$//' entrypoint.sh"
 RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+# ENTRYPOINT ["./entrypoint.sh"]
