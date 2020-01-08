@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-RUN apk add --no-cache bash
 WORKDIR /src
 COPY . .
 
