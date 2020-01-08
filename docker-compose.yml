@@ -80,10 +80,10 @@ services:
       - 2000:5000  
     # 挂断自动重新启动
     restart: always  
-    depends_on:
-      - sqlserver
-      - redis
-      - mongo    
+    # depends_on:
+    #   - sqlserver
+    #   - redis
+    #   - mongo    
 
   Base.IdentityServer:
     image: 'base.identityserver:${TAG:-latest}'
@@ -97,11 +97,11 @@ services:
       - 2001:5000  
     # 挂断自动重新启动
     restart: always      
-    depends_on:
-      - sqlserver
-      - redis
-      - mongo
-      - AdminApiGateway.Host
+    # depends_on:
+    #   - sqlserver
+    #   - redis
+    #   - mongo
+    #   - AdminApiGateway.Host
 
   Base.HttpApi.Host:
     image: 'base.httpapi.host:${TAG:-latest}'
@@ -115,10 +115,10 @@ services:
       - 2002:5000
     # 挂断自动重新启动
     restart: always        
-    depends_on:
-      - sqlserver
-      - redis
-      - mongo
-      - AdminApiGateway.Host
-      - Base.IdentityServer 
+    # depends_on:
+    #   - sqlserver
+    #   - redis
+    #   - mongo
+    #   - AdminApiGateway.Host
+    #   - Base.IdentityServer 
  
