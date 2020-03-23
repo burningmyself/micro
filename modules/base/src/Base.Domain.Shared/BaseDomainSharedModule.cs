@@ -2,7 +2,7 @@
 using Volo.Abp.Localization;
 using Base.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
-using Volo.Abp.Localization.Resources.AbpValidation;
+//using Volo.Abp.Localization.Resources.AbpValidation;
 using Volo.Abp.VirtualFileSystem;
 
 namespace Base
@@ -23,7 +23,7 @@ namespace Base
             {
                 options.Resources
                     .Add<BaseResource>("en")
-                    .AddBaseTypes(typeof(AbpValidationResource))
+                    //.AddBaseTypes(typeof(AbpValidationResource))
                     .AddVirtualJson("/Localization/Base");
             });
 

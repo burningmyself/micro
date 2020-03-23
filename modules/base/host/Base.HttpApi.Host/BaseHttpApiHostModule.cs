@@ -131,7 +131,7 @@ namespace Base
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "HttpApi APP API");
             });
             app.UseAuditing();
             app.UseMvcWithDefaultRouteAndArea();

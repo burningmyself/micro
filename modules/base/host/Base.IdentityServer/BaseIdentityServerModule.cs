@@ -81,7 +81,7 @@ namespace Base
             context.Services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Base API", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Identity APP API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.CustomSchemaIds(type => type.FullName);
                 });
@@ -169,7 +169,7 @@ namespace Base
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity APP API");
             });
             app.UseAuditing();
             app.UseMvcWithDefaultRouteAndArea();

@@ -299,10 +299,10 @@ namespace Base.Controllers
 
         protected virtual async Task ReplaceEmailToUsernameOfInputIfNeeds(UserLoginInfo login)
         {
-            if (!ValidationHandler.IsValidEmailAddress(login.UserNameOrEmailAddress))
-            {
-                return;
-            }
+            //if (!ValidationHandler.IsValidEmailAddress(login.UserNameOrEmailAddress))
+            //{
+            //    return;
+            //}
 
             var userByUsername = await _userManager.FindByNameAsync(login.UserNameOrEmailAddress);
             if (userByUsername != null)
