@@ -7,7 +7,6 @@
 | [Base.HttpApi.Host](https://github.com/burningmyself/micro/tree/master/modules/base/host/Base.HttpApi.Host)      | 基础服务api                     |
 | [Base.IdentityServer](https://github.com/burningmyself/micro/tree/master/modules/base/host/Base.IdentityServer)  | 身份认证服务api                 |
 | gateways                                                                                                         | 网关服务                        |
-| ----------------------------------------------------------------------------------------| :-------------------------------|
 | [AdminApiGateway.Host](https://github.com/burningmyself/micro/tree/master/gateways/AdminApiGateway.Host)         | 网关服务                        |
 | modules                                                                                                          | 模块                            |
 | -base                                                                                                            | 基础模块                        |
@@ -16,7 +15,7 @@
 
 ## Issue 报告指南
 
-如果提交的是 Bug 报告，请务必遵守 [`Bug report`](https://github.com/buringmyself/micro/.github/ISSUE_TEMPLATE/bug_report.md) 模板。
+如果提交的是 Bug 报告，请务必遵守 [`Bug report`](https://github.com/burningmyself/micro/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) 模板。
 
 如果提交的是功能需求，请在 issue 的标题的起始处增加 `[Feature request]` 字符。
 
