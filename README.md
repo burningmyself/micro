@@ -30,11 +30,11 @@ layui 后台layui
 
 ![example](./vue/src/assets/example.png)
 
-## 贡献
+## 🤝 参与共建 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-    欢迎大神添砖
+请参考[贡献指南](https://github.com/burningmyself/micro).
 
-    感觉可以，给星就是最大得支持
+> 强烈推荐阅读 [《提问的智慧》](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way)、[《如何向开源社区提问题》](https://github.com/seajs/seajs/issues/545) 和 [《如何有效地报告 Bug》](http://www.chiark.greenend.org.uk/%7Esgtatham/bugs-cn.html)、[《如何向开源项目提交无法解答的问题》](https://zhuanlan.zhihu.com/p/25795393)，更好的问题更容易获得帮助。
 
 ## java  spring boot 2.2.2 admin
 [spring-boot-admin](https://github.com/burningmyself/ysf): http://ysf.burningmyself.cn:8080
