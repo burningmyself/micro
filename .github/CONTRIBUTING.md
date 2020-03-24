@@ -25,7 +25,7 @@
 
 
 ## Pull Request 指南
-[Pull Request 指南](https://github.com/buringmyself/micro/.github/PULL_REQUEST_TEMPLATE.md)
+[Pull Request 指南](https://github.com/burningmyself/micro/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 1. 务必保证 `dotnet run build` 能够编译成功；
 2. 务必保证提交到代码遵循相关包中所规定的规范；
 3. 当相关包的含有test时，必须保证所有测试用例都需要通过；
