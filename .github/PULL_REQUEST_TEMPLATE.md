@@ -1,54 +1,48 @@
 <!--
-First of all, thank you for your contribution! 😄
+首先，感谢你的贡献！😄
 
-New feature please send pull request to feature branch, and rest to master branch.
-Pull request will be merged after one of collaborators approve.
-Please makes sure that these form are filled before submitting your pull request, thank you!
+新特性请提交至 feature 分支，其余可提交至 master 分支。
+在一个维护者审核通过后合并。
+请确保填写以下 pull request 的信息，谢谢！~
 
-[[中文版模板 / Chinese template](https://github.com/ant-design/ant-design/blob/master/.github/PULL_REQUEST_TEMPLATE/pr_cn.md)]
 -->
 
-### 🤔 This is a ...
+### 🤔 这个变动的性质是？
 
-- [ ] New feature
-- [ ] Bug fix
-- [ ] Site / document update
-- [ ] Component style update
-- [ ] TypeScript definition update
-- [ ] Refactoring
-- [ ] Code style optimization
-- [ ] Test Case
-- [ ] Branch merge
-- [ ] Other (about what?)
+- [ ] 新特性提交
+- [ ] 日常 bug 修复
+- [ ] 站点、文档改进
+- [ ] 组件样式改进
+- [ ] micro定义更新
+- [ ] 重构
+- [ ] 代码风格优化
+- [ ] 测试用例
+- [ ] 分支合并
+- [ ] 其他改动（是关于什么的改动？）
 
-### 🔗 Related issue link
+### 🔗 相关 Issue
 
 <!--
-1. Describe the source of requirement, like related issue link.
+1. 描述相关需求的来源，如相关的 issue 讨论链接。
 -->
 
-### 💡 Background and solution
+### 💡 需求背景和解决方案
 
 <!--
-1. Describe the problem and the scenario.
-2. GIF or snapshot should be provided if includes UI/interactive modification.
-3. How to fix the problem, and list final API implementation and usage sample if that is an new feature.
+1. 要解决的具体问题。
+2. 列出最终的 API 实现和用法。
+3. 涉及UI/交互变动需要有截图或 GIF。
 -->
 
-### 📝 Changelog
+### 📝 更新日志怎么写？
 
 <!--
-Describe changes from userside, and list all potential break changes or other risks.
---->
+> 从用户角度描述具体变化，以及可能的 breaking change 和其他风险？
+-->
 
-| Language   | Changelog |
-| ---------- | --------- |
-| 🇺🇸 English |           |
-| 🇨🇳 Chinese |           |
+### ☑️ 请求合并前的自查清单
 
-### ☑️ Self Check before Merge
-
-- [ ] Doc is updated/provided or not needed
-- [ ] Demo is updated/provided or not needed
-- [ ] TypeScript definition is updated/provided or not needed
-- [ ] Changelog is provided or not needed
+- [ ] 文档已补充或无须补充
+- [ ] 代码演示已提供或无须提供
+- [ ] TypeScript 定义已补充或无须补充
+- [ ] Changelog 已提供或无须提供

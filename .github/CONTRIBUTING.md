@@ -3,11 +3,11 @@
 ## miro 组成
 
 | application                                                                                                      | 应用服务                        |
-| ---------------------------------------------------------------------------------------------------------------- | :-------------------------------|
+| ----------------------------------------------------------------------------------------| :-------------------------------|
 | [Base.HttpApi.Host](https://github.com/burningmyself/micro/tree/master/modules/base/host/Base.HttpApi.Host)      | 基础服务api                     |
 | [Base.IdentityServer](https://github.com/burningmyself/micro/tree/master/modules/base/host/Base.IdentityServer)  | 身份认证服务api                 |
 | gateways                                                                                                         | 网关服务                        |
-| ---------------------------------------------------------------------------------------------------------------- | :-------------------------------|
+| ----------------------------------------------------------------------------------------| :-------------------------------|
 | [AdminApiGateway.Host](https://github.com/burningmyself/micro/tree/master/gateways/AdminApiGateway.Host)         | 网关服务                        |
 | modules                                                                                                          | 模块                            |
 | -base                                                                                                            | 基础模块                        |
@@ -26,7 +26,7 @@
 
 
 ## Pull Request 指南
-
+[Pull Request 指南](https://github.com/buringmyself/micro/.github/PULL_REQUEST_TEMPLATE.md)
 1. 务必保证 `dotnet run build` 能够编译成功；
 2. 务必保证提交到代码遵循相关包中所规定的规范；
 3. 当相关包的含有test时，必须保证所有测试用例都需要通过；
