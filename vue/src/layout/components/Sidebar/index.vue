@@ -53,9 +53,6 @@ interface Root {
 export default class extends Vue {
   constructor() {
     super()
-    let grantRoutes: Array<string> = this.assset()
-    let routes = this.routes
-    this.routes = this.fooMenu(grantRoutes, routes)
   }
 
   assset() {
@@ -82,8 +79,11 @@ export default class extends Vue {
     return AppModule.sidebar
   }
 
-  @Model()
-  routes: any = PermissionModule.routes;
+  // @Model()
+  get routes() {
+    let grantRoutes: Array<string> = this.assset()
+    return this.fooMenu(grantRoutes, PermissionModule.routes)
+  }
 
   get showLogo() {
     return SettingsModule.showSidebarLogo
