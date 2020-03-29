@@ -5,7 +5,7 @@ const systemRouter: RouteConfig = {
   path: '/system',
   name: 'AbpIdentity',
   meta: {
-    icon: 'logo-buffer',
+    icon: 'component',
     title: 'system'
   },
   component: Layout,
@@ -13,7 +13,6 @@ const systemRouter: RouteConfig = {
     path: 'users',
     name: 'AbpIdentity.Users',
     meta: {
-      icon: 'md-contact',
       title: 'users'
     },
     component: () => import(/* webpackChunkName: "system" */ '@/views/system/user/index.vue')
@@ -21,7 +20,6 @@ const systemRouter: RouteConfig = {
     path: 'roles',
     name: 'AbpIdentity.Roles',
     meta: {
-      icon: 'md-contacts',
       title: 'roles'
     },
     component: () => import(/* webpackChunkName: "system" */ '@/views/system/role/index.vue')
@@ -29,7 +27,6 @@ const systemRouter: RouteConfig = {
     path: 'tenants',
     name: 'AbpTenantManagement.Tenants',
     meta: {
-      icon: 'md-menu',
       title: 'tenants'
     },
     component: () => import('@/views/system/tenant/index.vue')
