@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Localization" Version="2.4.0" />
+    <PackageReference Include="Volo.Abp.Localization" Version="2.6.1" />
   </ItemGroup>
 
   <ItemGroup>
