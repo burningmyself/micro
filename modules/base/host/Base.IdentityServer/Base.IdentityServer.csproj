@@ -17,29 +17,29 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore.MultiTenancy" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Autofac" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Account.Web.IdentityServer" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.IdentityModel" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.IdentityServer.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Identity.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Identity.Application" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.EntityFrameworkCore" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="2.7.0" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.MultiTenancy" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.Account.Web.IdentityServer" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.IdentityModel" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.IdentityServer.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.Identity.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.TenantManagement.EntityFrameworkCore" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="2.8.0" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="2.8.0" />
     <ProjectReference Include="..\..\src\Base.Application.Contracts\Base.Application.Contracts.csproj" />
     <ProjectReference Include="..\Base.Host.Shared\Base.Host.Shared.csproj" />
   </ItemGroup>
