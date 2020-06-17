@@ -16,10 +16,10 @@ namespace AdminApiGateway.Host.Controllers
     [Route("api/abp/language/[action]")]
     public class AbpLanguagesController : AbpController
     {
-        private readonly ConfigurationAppService _applicationConfigurationAppService;
+        private readonly AbpApplicationConfigurationAppService _applicationConfigurationAppService;
 
         public AbpLanguagesController(
-            ConfigurationAppService applicationConfigurationAppService)
+            AbpApplicationConfigurationAppService applicationConfigurationAppService)
         {
             _applicationConfigurationAppService = applicationConfigurationAppService;
         }
@@ -43,7 +43,7 @@ namespace AdminApiGateway.Host.Controllers
         [HttpGet]
         public Task<ApplicationLocalizationConfigurationDto> Localization()
         {
-            return _applicationConfigurationAppService.LocalizationAsync();
+            return null;
         }
 
         private static bool IsValidCultureCode(string cultureCode)
