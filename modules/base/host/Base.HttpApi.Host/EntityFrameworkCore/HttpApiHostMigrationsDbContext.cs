@@ -3,9 +3,9 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Base.EntityFrameworkCore
 {
-    public class MyProjectHttpApiHostMigrationsDbContext : AbpDbContext<MyProjectHttpApiHostMigrationsDbContext>
+    public class HttpApiHostMigrationsDbContext : AbpDbContext<HttpApiHostMigrationsDbContext>
     {
-        public MyProjectHttpApiHostMigrationsDbContext(DbContextOptions<MyProjectHttpApiHostMigrationsDbContext> options)
+        public HttpApiHostMigrationsDbContext(DbContextOptions<HttpApiHostMigrationsDbContext> options)
             : base(options)
         {
         

@@ -5,16 +5,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace Base.EntityFrameworkCore
 {
-    public class MyProjectHttpApiHostMigrationsDbContextFactory : IDesignTimeDbContextFactory<MyProjectHttpApiHostMigrationsDbContext>
+    public class HttpApiHostMigrationsDbContextFactory : IDesignTimeDbContextFactory<HttpApiHostMigrationsDbContext>
     {
-        public MyProjectHttpApiHostMigrationsDbContext CreateDbContext(string[] args)
+        public HttpApiHostMigrationsDbContext CreateDbContext(string[] args)
         {
             var configuration = BuildConfiguration();
 
-            var builder = new DbContextOptionsBuilder<MyProjectHttpApiHostMigrationsDbContext>()
+            var builder = new DbContextOptionsBuilder<HttpApiHostMigrationsDbContext>()
                 .UseSqlServer(configuration.GetConnectionString("Base"));
 
-            return new MyProjectHttpApiHostMigrationsDbContext(builder.Options);
+            return new HttpApiHostMigrationsDbContext(builder.Options);
         }
 
         private static IConfigurationRoot BuildConfiguration()
