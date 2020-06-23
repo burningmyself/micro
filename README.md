@@ -3,6 +3,12 @@ abpnext+micro+typescript+vue+element
 
 本框架是abpNext微服实现模板，主要给新手操练
 
+![GitHub issues](https://img.shields.io/github/issues/burningmyself/micro)
+![GitHub forks](https://img.shields.io/github/forks/burningmyself/micro)
+![GitHub stars](https://img.shields.io/github/stars/burningmyself/micro)
+![GitHub license](https://img.shields.io/github/license/burningmyself/micro)
+![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fburningmyself%2Fmicro)
+
 ## 目录
 
 application 包括微服务服务程序
