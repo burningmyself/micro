@@ -57,7 +57,7 @@ namespace AdminApiGateway.Host
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    //webBuilder.UseUrls("http://172.17.0.13:2000/", "http://localhost:2000/");
+                    //webBuilder.UseUrls("http://172.17.0.9:2000/", "http://localhost:2000/");
                     webBuilder.UseStartup<Startup>();
                 })
                 .UseAutofac()

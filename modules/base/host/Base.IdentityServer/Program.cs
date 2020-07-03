@@ -44,7 +44,7 @@ namespace Base
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    //webBuilder.UseUrls("http://172.17.0.13:2001/", "http://localhost:2001/");
+                    //webBuilder.UseUrls("http://172.17.0.9:2001/", "http://localhost:2001/");
                     webBuilder.UseStartup<Startup>();
                 })
                 .UseAutofac()
